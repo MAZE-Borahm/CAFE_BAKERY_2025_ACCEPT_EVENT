@@ -1,6 +1,6 @@
 import { MENU_LIST } from '@/constants/menu'
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLikes } from './useLikes'
 import MenuModal from './components/MenuModal'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -26,6 +26,34 @@ const Result = () => {
   const navigation = useNavigate()
   const result = (location.state as LocationState)?.result
 
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  })
+
+  useEffect(() => {
+    // 화면 크기 변경 감지 함수
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      })
+    }
+
+    // 이벤트 리스너 등록
+    window.addEventListener('resize', handleResize)
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  // 콘솔에 현재 크기 출력 (필요한 경우)
+  console.log('Current window size:', windowSize)
+
+  // ... 기존 코드 ...
+
   // 성별에 따른 메뉴 필터링
   const filteredMenus = MENU_LIST.filter((menu) => menu.gender.includes(result?.gender || 'female'))
 
@@ -43,6 +71,9 @@ const Result = () => {
   return (
     <Container>
       <Title>{titleText}</Title>
+      <div>
+        Width: {windowSize.width}px, Height: {windowSize.height}px
+      </div>
       <Subtitle>메뉴를 터치하시면 상세 정보를 보실 수 있습니다.</Subtitle>
       <MenuContainer>
         {filteredMenus.map((menu, index) => (
@@ -132,8 +163,6 @@ const MenuItem = styled.div`
   @media screen and (max-width: 1920px) {
     width: 100%;
     height: auto;
-    aspect-ratio: 300/378; // 원래 비율 유지
-    min-height: 200px; // 너무 작아지지 않도록 최소 높이 설정
   }
 
   &:hover {
@@ -149,8 +178,7 @@ const MenuImage = styled.img`
 
   @media screen and (max-width: 1920px) {
     width: 100%;
-    height: auto;
-    aspect-ratio: 1; // 정사각형 비율 유지
+    aspect-ratio: 1;
   }
 `
 
