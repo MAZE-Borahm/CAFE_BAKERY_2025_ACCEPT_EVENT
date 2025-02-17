@@ -52,7 +52,7 @@ const Result = () => {
             <MenuBottom>
               <p>억셉트커피</p>
               <LikeButton>
-                <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                <SvgIcon name='heart' size={window.innerWidth <= 1280 ? 8 : 12} style={{ transform: 'translateY(1px)' }} />
                 <LikeCount>{getLikeCount(menu.name)}</LikeCount>
               </LikeButton>
             </MenuBottom>
@@ -60,7 +60,7 @@ const Result = () => {
         ))}
       </MenuContainer>
       <GoHomeButton onClick={handleGoHomeButton}>
-        <SvgIcon name='home' size={32} />
+        <SvgIcon name='home' size={window.innerWidth <= 1280 ? 20 : 32} />
         <span>홈으로</span>
       </GoHomeButton>
 
@@ -74,11 +74,12 @@ export default Result
 const Container = styled.div`
   position: relative;
   padding: 63px 129px 55px 113px;
+
   @media screen and (max-width: 1280px) {
-    /* padding: 44px 91px 39px 80px; */
-    padding: 44px 91px 39px 60px;
+    padding: 40px 5% 35px 5%;
   }
 `
+
 const Title = styled.h2`
   margin-bottom: 24px;
   text-align: left;
@@ -86,8 +87,8 @@ const Title = styled.h2`
   font-weight: 300;
 
   @media screen and (max-width: 1280px) {
-    margin-bottom: 17px; // 24px * 0.705
-    font-size: 45px; // 64px * 0.705
+    margin-bottom: 15px;
+    font-size: 40px;
   }
 `
 
@@ -98,8 +99,8 @@ const Subtitle = styled.p`
   color: #666;
 
   @media screen and (max-width: 1280px) {
-    margin-bottom: 27px; // 38px * 0.705
-    font-size: 25px; // 36px * 0.705
+    margin-bottom: 24px;
+    font-size: 23px;
   }
 `
 
@@ -109,24 +110,29 @@ const MenuContainer = styled.div`
   gap: 32px;
   max-width: 1760px;
   margin: 0 auto;
+
+  @media screen and (max-width: 1280px) {
+    gap: clamp(15px, 2vw, 32px);
+    width: 100%;
+  }
 `
 
 const MenuItem = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // center에서 flex-start로 변경
-  padding: 0; // 패딩 제거
+  align-items: flex-start;
+  padding: 0;
   cursor: pointer;
   transition: transform 0.2s;
-  overflow: hidden; // 이미지가 테두리를 벗어나지 않도록
+  overflow: hidden;
 
   width: 300px;
   height: 378px;
 
   @media screen and (max-width: 1280px) {
-    width: 211px;
-    height: 266px;
+    width: clamp(160px, 15vw, 250px);
+    height: clamp(202px, 19vw, 315px);
   }
 
   &:hover {
@@ -138,12 +144,14 @@ const MenuImage = styled.img`
   width: 300px;
   height: 300px;
   object-fit: cover;
-  margin-bottom: 0; // 마진 제거
+  margin-bottom: 0;
+
   @media screen and (max-width: 1280px) {
-    width: 211px;
-    height: 211px;
+    width: clamp(160px, 15vw, 250px);
+    height: clamp(160px, 15vw, 250px);
   }
 `
+
 const MenuName = styled.span`
   font-size: 18px;
   font-weight: 400;
@@ -151,10 +159,11 @@ const MenuName = styled.span`
   text-align: left;
   width: 100%;
   color: #333;
+  padding-left: 4px;
 
   @media screen and (max-width: 1280px) {
-    font-size: 13px; // 18 * 0.705
-    margin-top: 8px; // 11 * 0.705
+    font-size: 11px;
+    margin-top: 7px;
   }
 `
 
@@ -164,15 +173,17 @@ const MenuBottom = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 11px;
+  padding: 0 4px;
+
   p {
     font-size: 14px;
     font-weight: 700;
   }
 
   @media screen and (max-width: 1280px) {
-    margin-top: 8px; // 11 * 0.705
+    margin-top: 7px;
     p {
-      font-size: 10px; // 14 * 0.705
+      font-size: 9px;
     }
   }
 `
@@ -191,10 +202,10 @@ const LikeButton = styled.button`
   font-weight: 700;
 
   @media screen and (max-width: 1280px) {
-    gap: 8px; // 12 * 0.705
-    padding: 4px 7px; // 5/10 * 0.705
-    border-radius: 6px; // 8 * 0.705
-    font-size: 11px; // 16 * 0.705
+    gap: 8px;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 10px;
   }
 
   &:hover {
@@ -208,7 +219,7 @@ const LikeCount = styled.span`
   font-weight: 600;
 
   @media screen and (max-width: 1280px) {
-    font-size: 11px; // 기본 폰트 사이즈 조정
+    font-size: 10px;
   }
 `
 
@@ -225,8 +236,20 @@ const GoHomeButton = styled.div`
   align-items: center;
   justify-content: center;
   color: white;
+  cursor: pointer;
+
+  @media screen and (max-width: 1280px) {
+    width: 38px;
+    height: 38px;
+    bottom: 35px;
+    right: 43px;
+    border-radius: 15px;
+  }
 
   span {
     font-size: 12px;
+    @media screen and (max-width: 1280px) {
+      font-size: 8px;
+    }
   }
 `
