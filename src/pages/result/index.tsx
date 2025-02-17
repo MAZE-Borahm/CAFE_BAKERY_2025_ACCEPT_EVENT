@@ -56,7 +56,7 @@ const Result = () => {
             <MenuBottom>
               <p>억셉트커피</p>
               <LikeButton>
-                <SvgIcon name='heart' size={window.innerWidth <= 1920 ? 8 : 12} style={{ transform: 'translateY(1px)' }} />
+                <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
                 <LikeCount>{getLikeCount(menu.id)}</LikeCount>
               </LikeButton>
             </MenuBottom>
@@ -241,18 +241,7 @@ const GoHomeButton = styled.div`
   color: white;
   cursor: pointer;
 
-  @media screen and (max-width: 1600px) {
-    width: 38px;
-    height: 38px;
-    bottom: 35px;
-    right: 43px;
-    border-radius: 15px;
-  }
-
   span {
     font-size: 12px;
-    @media screen and (max-width: 1600px) {
-      font-size: 8px;
-    }
   }
 `
