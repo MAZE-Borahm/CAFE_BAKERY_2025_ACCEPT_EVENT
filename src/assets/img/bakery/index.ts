@@ -1,13 +1,13 @@
-import almondCroissants from './almond-croissants.png'
-import appleCreamCheesePie from './apple-cream-cheese-pie.jpg'
-import basilSandwich from './basil-sandwich.png'
-import blueberryCreamCheeseCronut from './blueberry-cream-cheese-cronut.jpg'
-import brioche from './brioche.png'
-import chiveCreamCheeseSaltbread from './chive-cream-cheese saltbread.jpg'
-import chocobangoChocolates from './chocobango-chocolates.png'
-import garlicCroissants from './garlic-croissants.png'
-import hagelsugaMontBlanc from './hagelsuga-mont-blanc.jpg'
-import sausagePastry from './sausage-pastry.png'
+import almondCroissants from './almond-croissants.webp'
+import appleCreamCheesePie from './apple-cream-cheese-pie.webp'
+import basilSandwich from './basil-sandwich.webp'
+import blueberryCreamCheeseCronut from './blueberry-cream-cheese-cronut.webp'
+import brioche from './brioche.webp'
+import chiveCreamCheeseSaltbread from './chive-cream-cheese-saltbread.webp'
+import chocobangoChocolates from './chocobango-chocolates.webp'
+import garlicCroissants from './garlic-croissants.webp'
+import hagelsugaMontBlanc from './hagelsuga-mont-blanc.webp'
+import sausagePastry from './sausage-pastry.webp'
 
 export {
   almondCroissants,
