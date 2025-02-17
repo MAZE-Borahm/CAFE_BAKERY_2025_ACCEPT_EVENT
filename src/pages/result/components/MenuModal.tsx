@@ -15,23 +15,52 @@ interface MenuModalProps {
   likeCount: number
 }
 
-const MenuModal = ({ menu, onClose, onLike, likeCount }: MenuModalProps) => {
-  const handleLike = () => {
+import React, { useCallback } from 'react'
+import SvgIcon from '@/components/SvgIcon'
+import styled from 'styled-components'
+
+// 상수 정의
+const ICON_SIZE = window.innerWidth <= 1920 ? 13 : 19
+
+interface Menu {
+  name: string
+  image: string
+  description: string
+  flavorProfile?: string
+}
+
+interface MenuModalProps {
+  menu: Menu
+  onClose: () => void
+  onLike: () => void
+  likeCount: number
+}
+
+const MenuModal = React.memo(({ menu, onClose, onLike, likeCount }: MenuModalProps) => {
+  const handleLike = useCallback(() => {
     onLike()
     onClose()
-  }
+  }, [onLike, onClose])
+
+  const handleOverlayClick = useCallback(() => {
+    onClose()
+  }, [onClose])
+
+  const handleContentClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+  }, [])
 
   return (
-    <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+    <ModalOverlay onClick={handleOverlayClick}>
+      <ModalContent onClick={handleContentClick}>
         <ContentHeader>{menu.name}</ContentHeader>
         <ContentSubHeader>{menu.description}</ContentSubHeader>
-        <ModalImage src={menu.image} alt={menu.name} />
+        <ModalImage src={menu.image} alt={menu.name} loading='lazy' />
         <ModalInfo>
           <InfoText>{menu.flavorProfile && '해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.'}</InfoText>
           <ButtonGroup>
             <LikeButton onClick={handleLike}>
-              <SvgIcon name='heart' size={window.innerWidth <= 1920 ? 13 : 19} style={{ transform: 'translateY(1px)' }} />
+              <SvgIcon name='heart' size={ICON_SIZE} style={{ transform: 'translateY(1px)' }} />
               <span>{likeCount}</span>
             </LikeButton>
             <CloseModalButton onClick={onClose}>닫기</CloseModalButton>
@@ -40,8 +69,11 @@ const MenuModal = ({ menu, onClose, onLike, likeCount }: MenuModalProps) => {
       </ModalContent>
     </ModalOverlay>
   )
-}
+})
+
 export default MenuModal
+
+// 기존 styled-components 코드 그대로 유지
 
 const ModalOverlay = styled.div`
   position: fixed;

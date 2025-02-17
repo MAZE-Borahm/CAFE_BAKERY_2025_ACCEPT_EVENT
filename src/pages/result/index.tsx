@@ -1,6 +1,6 @@
-import { MENU_LIST } from '@/constants/menu'
+import React, { useState, useMemo, useCallback } from 'react'
 import styled from 'styled-components'
-import { useState } from 'react'
+import { MENU_LIST } from '@/constants/menu'
 import { useLikes } from './useLikes'
 import MenuModal from './components/MenuModal'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -23,35 +23,57 @@ interface LocationState {
   }
 }
 
-const Result = () => {
+const LazyImage = React.memo(({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  const handleImageLoad = React.useCallback(() => {
+    setIsLoaded(true)
+  }, [])
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      {...props}
+      style={{
+        opacity: isLoaded ? 1 : 0.5,
+        transition: 'opacity 0.3s ease-in-out',
+      }}
+      onLoad={handleImageLoad}
+    />
+  )
+})
+
+const Result = React.memo(() => {
   const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null)
   const { toggleLike, getLikeCount } = useLikes()
   const location = useLocation()
   const navigation = useNavigate()
   const result = (location.state as LocationState)?.result
 
-  // 성별에 따른 메뉴 필터링
-  const filteredMenus = MENU_LIST.filter((menu) => menu.gender.includes(result?.gender || 'female'))
+  // 메모이제이션된 필터링된 메뉴
+  const filteredMenus = useMemo(() => MENU_LIST.filter((menu) => menu.gender.includes(result?.gender || 'female')), [result?.gender])
 
-  // 성별에 따른 타이틀 텍스트
-  const titleText = (result?.gender ?? 'female') === 'male' ? '남성이시군요! 아래 메뉴를 추천해 드립니다~!' : '여성이시군요! 아래 메뉴를 추천해 드립니다~!'
+  // 메모이제이션된 타이틀 텍스트
+  const titleText = useMemo(() => ((result?.gender ?? 'female') === 'male' ? '남성이시군요! 아래 메뉴를 추천해 드립니다~!' : '여성이시군요! 아래 메뉴를 추천해 드립니다~!'), [result?.gender])
 
-  const handleMenuClick = (menu: Menu) => {
+  // useCallback으로 메모이제이션된 핸들러
+  const handleMenuClick = useCallback((menu: Menu) => {
     setSelectedMenu(menu)
-  }
+  }, [])
 
-  const handleGoHomeButton = () => {
+  const handleGoHomeButton = useCallback(() => {
     navigation(ROUTER.MAIN)
-  }
+  }, [navigation])
 
   return (
     <Container>
       <Title>{titleText}</Title>
       <Subtitle>메뉴를 터치하시면 상세 정보를 보실 수 있습니다.</Subtitle>
       <MenuContainer>
-        {filteredMenus.map((menu, index) => (
-          <MenuItem key={index} onClick={() => handleMenuClick(menu)}>
-            <MenuImage src={menu.image} alt={menu.name} />
+        {filteredMenus.map((menu) => (
+          <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
+            <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
             <MenuName>{menu.name}</MenuName>
             <MenuBottom>
               <p>억셉트커피</p>
@@ -64,94 +86,54 @@ const Result = () => {
         ))}
       </MenuContainer>
       <GoHomeButton onClick={handleGoHomeButton}>
-        <SvgIcon name='home' size={window.innerWidth <= 1280 ? 20 : 32} />
+        <SvgIcon name='home' size={20} />
         <span>홈으로</span>
       </GoHomeButton>
-      {selectedMenu && <MenuModal menu={selectedMenu} onClose={() => setSelectedMenu(null)} onLike={() => toggleLike(selectedMenu.id)} likeCount={getLikeCount(selectedMenu.id)} />}{' '}
+      {selectedMenu && <MenuModal menu={selectedMenu} onClose={() => setSelectedMenu(null)} onLike={() => toggleLike(selectedMenu.id)} likeCount={getLikeCount(selectedMenu.id)} />}
     </Container>
   )
-}
+})
 
 export default Result
 
 const Container = styled.div`
   position: relative;
-  padding: 63px 129px 55px 113px;
-
-  @media screen and (max-width: 1600px) {
-    padding: 40px 5% 35px 5%;
-  }
+  padding: 40px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
 `
 
 const Title = styled.h2`
-  margin-bottom: 24px;
+  margin-bottom: 15px;
   text-align: left;
-  font-size: 64px;
+  font-size: 40px;
   font-weight: 300;
-
-  @media screen and (max-width: 1600px) {
-    margin-bottom: 15px;
-    font-size: 40px;
-  }
 `
 
 const Subtitle = styled.p`
-  margin-bottom: 38px;
+  margin-bottom: 24px;
   font-weight: 300;
-  font-size: 36px;
+  font-size: 23px;
   color: #666;
-
-  @media screen and (max-width: 1600px) {
-    margin-bottom: 24px;
-    font-size: 23px;
-  }
 `
 
 const MenuContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 32px;
-  max-width: 1760px;
-  margin: 0 auto;
-
-  @media screen and (max-width: 1600px) {
-    gap: clamp(15px, 2vw, 32px);
-    width: 100%;
-  }
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 15px;
+  width: 100%;
 `
 
 const MenuItem = styled.div`
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0;
   cursor: pointer;
   transition: transform 0.2s;
   overflow: hidden;
 
-  width: 300px;
-  height: 378px;
-
-  @media screen and (max-width: 1600px) {
-    width: clamp(160px, 15vw, 250px);
-    height: clamp(202px, 19vw, 315px);
-  }
-
   &:hover {
     transform: scale(1.02);
-  }
-`
-
-const MenuImage = styled.img`
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
-  margin-bottom: 0;
-
-  @media screen and (max-width: 1600px) {
-    width: clamp(160px, 15vw, 250px);
-    height: clamp(160px, 15vw, 250px);
   }
 `
 
@@ -163,11 +145,6 @@ const MenuName = styled.span`
   width: 100%;
   color: #333;
   padding-left: 4px;
-
-  @media screen and (max-width: 1600px) {
-    font-size: 11px;
-    margin-top: 7px;
-  }
 `
 
 const MenuBottom = styled.div`
@@ -181,13 +158,6 @@ const MenuBottom = styled.div`
   p {
     font-size: 14px;
     font-weight: 700;
-  }
-
-  @media screen and (max-width: 1600px) {
-    margin-top: 7px;
-    p {
-      font-size: 9px;
-    }
   }
 `
 
@@ -204,13 +174,6 @@ const LikeButton = styled.button`
   font-size: 16px;
   font-weight: 700;
 
-  @media screen and (max-width: 1600px) {
-    gap: 8px;
-    padding: 3px 6px;
-    border-radius: 5px;
-    font-size: 10px;
-  }
-
   &:hover {
     background-color: #ff3333;
     transform: scale(1.05);
@@ -220,10 +183,6 @@ const LikeButton = styled.button`
 const LikeCount = styled.span`
   color: white;
   font-weight: 600;
-
-  @media screen and (max-width: 1600px) {
-    font-size: 10px;
-  }
 `
 
 const GoHomeButton = styled.div`
