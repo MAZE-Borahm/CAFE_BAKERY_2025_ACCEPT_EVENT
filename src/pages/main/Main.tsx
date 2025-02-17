@@ -1,18 +1,30 @@
+import { useCallback } from 'react'
 import { Logo } from '@/assets/img'
 import { ROUTER } from '@/constants/router'
-
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Main = () => {
   const navigate = useNavigate()
+
+  const handleFullScreen = useCallback(async () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+      }
+    }
+  }, [])
+
   const handleClick = () => {
     navigate(ROUTER.CAMERA)
   }
+
   return (
     <Container>
       <StartButton onClick={handleClick}>시작하기</StartButton>
-      <LogoStyle src={Logo} />
+      <LogoStyle src={Logo} onClick={handleFullScreen} />
     </Container>
   )
 }
@@ -43,6 +55,7 @@ const LogoStyle = styled.img`
   width: 200px;
   position: fixed;
   bottom: 0px;
+  cursor: pointer; // 커서를 포인터로 변경하여 클릭 가능함을 표시
 
   @media screen and (max-width: 1280px) {
     width: 141px;
