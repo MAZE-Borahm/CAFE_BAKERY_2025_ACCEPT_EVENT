@@ -34,10 +34,17 @@ const StartButton = styled.button`
   font-weight: 300;
   background-color: #f3f3ea;
   border: none;
+  @media screen and (max-width: 1280px) {
+    font-size: 68px;
+  }
 `
 
 const LogoStyle = styled.img`
   width: 200px;
   position: fixed;
   bottom: 0px;
+
+  @media screen and (max-width: 1280px) {
+    width: 141px;
+  }
 `

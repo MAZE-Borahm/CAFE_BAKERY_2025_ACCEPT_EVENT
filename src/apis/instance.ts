@@ -2,7 +2,7 @@ import { LOCAL } from '@/constants/local'
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 
 const instance: AxiosInstance = axios.create({
-  baseURL: 'http://expo-recommend.data-fetch.net',
+  baseURL: 'https://expo-recommend.data-fetch.net',
   headers: {
     'content-type': 'application/json;charset=UTF-8',
     // accept: 'application/json,',

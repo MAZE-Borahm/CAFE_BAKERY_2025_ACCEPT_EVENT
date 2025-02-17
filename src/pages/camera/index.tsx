@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import { analyzeGender } from '@/apis/genderApi'
 import { Logo } from '@/assets/img'
 import { ROUTER } from '@/constants/router'
+import Lottie from 'lottie-react'
+import loadingAnimation from '@/assets/animations/Animation.json'
 
 const CameraCapture = () => {
   const navigate = useNavigate()
@@ -98,7 +100,8 @@ const CameraCapture = () => {
         {/* New Overlay */}
         <WebcamOverlay>
           <div>
-            <h1>귀하의 특성을 분석중입니다. </h1>
+            <Lottie animationData={loadingAnimation} />
+            <h1>귀하의 특성을 분석중입니다.</h1>
             <p>화면을 바라봐주세요</p>
           </div>
         </WebcamOverlay>
@@ -117,8 +120,7 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
-  /* align-items: center; */
-  padding-top: 5dvh;
+  padding-top: 8dvh;
   justify-content: center;
 `
 
@@ -126,9 +128,8 @@ const WebcamContainer = styled.div`
   position: relative;
   max-width: 926px;
   max-height: 791px;
-  min-height: 650px;
-  width: 100%;
-  height: 70vh;
+  width: 55dvw;
+  height: 70dvh;
 
   video {
     width: 100%;
@@ -148,24 +149,70 @@ const WebcamOverlay = styled.div`
   border-radius: 48px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; // 다시 center로 변경
   pointer-events: none;
+
   div {
     display: flex;
     flex-direction: column;
+    align-items: center; // 추가
     gap: 29px;
-    margin-bottom: 45px;
-    margin-top: auto;
     text-align: center;
-    h1 {
+    width: 100%; // 추가
+    height: 100%; // 추가
+    justify-content: center; // 추가
+
+    // Lottie 애니메이션을 위한 스타일
+    > div:first-child {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      margin-bottom: 0;
+      @media screen and (max-width: 1280px) {
+        width: 250px !important; // !important로 인라인 스타일 덮어쓰기
+        height: 250px !important;
+        top: 45%;
+        left: 50%;
+        transform: translate(-45%, -50%);
+      }
+    }
+
+    // 텍스트 컨테이너
+    > h1,
+    > p {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+    }
+
+    > h1 {
+      bottom: 140px;
       font-size: 64px;
       font-weight: 300;
       color: white;
+
+      @media screen and (max-width: 1280px) {
+        font-size: 45px;
+        bottom: 100px;
+      }
     }
-    p {
+
+    > p {
+      bottom: 60px;
       font-size: 40px;
       color: white;
       font-weight: 800;
+
+      @media screen and (max-width: 1280px) {
+        font-size: 28px;
+        bottom: 40px;
+      }
     }
   }
 `
@@ -184,7 +231,7 @@ const ErrorMessage = styled.div`
 `
 
 const LogoStyle = styled.img`
-  width: 200px;
+  width: 140px;
   position: fixed;
   bottom: 0px;
 `

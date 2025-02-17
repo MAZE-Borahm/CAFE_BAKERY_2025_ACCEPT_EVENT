@@ -1,8 +1,10 @@
+import SvgIcon from '@/components/SvgIcon'
 import styled from 'styled-components'
 
 interface Menu {
   name: string
   image: string
+  description: string
 }
 
 interface MenuModalProps {
@@ -16,14 +18,18 @@ const MenuModal = ({ menu, onClose, onLike, likeCount }: MenuModalProps) => {
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>X</CloseButton>
+        <ContentHeader>{menu.name}</ContentHeader>
+        <ContentSubHeader>{menu.description}</ContentSubHeader>
         <ModalImage src={menu.image} alt={menu.name} />
         <ModalInfo>
-          <ModalTitle>{menu.name}</ModalTitle>
-          <LikeButton onClick={onLike}>
-            하트
-            <LikeCount>{likeCount}</LikeCount>
-          </LikeButton>
+          <InfoText>해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.</InfoText>
+          <ButtonGroup>
+            <LikeButton onClick={onLike}>
+              <SvgIcon name='heart' size={window.innerWidth <= 1280 ? 13 : 19} style={{ transform: 'translateY(1px)' }} />
+              <span>{likeCount}</span>
+            </LikeButton>
+            <CloseModalButton onClick={onClose}>닫기</CloseModalButton>
+          </ButtonGroup>
         </ModalInfo>
       </ModalContent>
     </ModalOverlay>
@@ -38,7 +44,7 @@ const ModalOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(255, 255, 255, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,77 +54,139 @@ const ModalOverlay = styled.div`
 const ModalContent = styled.div`
   position: relative;
   background-color: white;
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 90%;
-  width: 500px;
+  border-radius: 24px;
+  width: 568px;
   max-height: 90vh;
   overflow-y: auto;
+  padding: 56px 40px 49px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media screen and (max-width: 1280px) {
+    width: 400px;
+    padding: 39px 28px 35px 28px;
+  }
+`
+
+const ContentHeader = styled.h2`
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+
+  @media screen and (max-width: 1280px) {
+    font-size: 25px;
+  }
+`
+
+const ContentSubHeader = styled.h3`
+  font-size: 24px;
+  font-weight: 400;
+  color: #666;
+  margin: 16px 0 22px;
+  text-align: center;
+
+  @media screen and (max-width: 1280px) {
+    font-size: 17px;
+    margin: 11px 0 15px;
+  }
 `
 
 const ModalImage = styled.img`
-  width: 100%;
-  height: 300px;
+  width: 296px;
+  height: 296px;
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 42px;
+
+  @media screen and (max-width: 1280px) {
+    width: 209px;
+    height: 209px;
+    margin-bottom: 30px;
+  }
 `
 
 const ModalInfo = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  gap: 24px;
+
+  @media screen and (max-width: 1280px) {
+    gap: 17px;
+  }
 `
 
-const ModalTitle = styled.h3`
-  font-size: 24px;
+const InfoText = styled.p`
+  font-size: 18px;
+  margin-bottom: 33px;
+  color: #333;
+  text-align: center;
   margin: 0;
+
+  @media screen and (max-width: 1280px) {
+    font-size: 13px;
+    margin-bottom: 23px;
+  }
 `
 
-const LikeButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
+const ButtonGroup = styled.div`
   display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #ff4b4b;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: all 0.2s;
+  gap: 16px;
+  justify-content: center;
+  width: 100%;
 
-  &:hover {
-    background-color: rgba(255, 75, 75, 0.1);
-  }
-
-  &:active {
-    transform: scale(0.95);
+  @media screen and (max-width: 1280px) {
+    gap: 11px;
   }
 `
 
-const LikeCount = styled.span`
-  font-size: 16px;
-  font-weight: 500;
-  min-width: 24px;
-  color: #666;
-`
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
+const LikeButton = styled.div`
+  background: #ff0000cc;
+  color: white;
   border: none;
   cursor: pointer;
-  color: #666;
-  padding: 8px;
-  border-radius: 50%;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  gap: 12px;
+
+  @media screen and (max-width: 1280px) {
+    padding: 8px 17px;
+    font-size: 13px;
+    min-width: 85px;
+    gap: 8px;
+  }
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: #ff3333;
+  }
+`
+
+const CloseModalButton = styled.button`
+  background: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 120px;
+
+  @media screen and (max-width: 1280px) {
+    padding: 8px 17px;
+    font-size: 13px;
+    min-width: 85px;
+  }
+
+  &:hover {
+    background-color: #444;
   }
 `
