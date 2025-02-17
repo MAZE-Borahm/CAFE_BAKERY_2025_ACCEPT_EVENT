@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { analyzeGender } from '@/apis/genderApi'
 import { Logo } from '@/assets/img'
-// import { ROUTER } from '@/constants/router'
+import { ROUTER } from '@/constants/router'
 
 const CameraCapture = () => {
   const navigate = useNavigate()
@@ -38,20 +38,18 @@ const CameraCapture = () => {
               const newPhotos = prev.length < 5 ? [...prev, photo] : prev
 
               if (newPhotos.length === 5) {
-                console.log(newPhotos)
-
                 // 5장 촬영 완료 시 서버로 전송
                 analyzeGender(newPhotos)
                   .then((result) => {
                     console.log(result)
 
-                    // setTimeout(() => {
-                    //   navigate(ROUTER.RESULT, {
-                    //     state: {
-                    //       result: result,
-                    //     },
-                    //   })
-                    // }, 0)
+                    setTimeout(() => {
+                      navigate(ROUTER.RESULT, {
+                        state: {
+                          result: result,
+                        },
+                      })
+                    }, 0)
                   })
                   .catch((error) => {
                     console.error('분석 중 에러:', error)
@@ -120,14 +118,17 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   /* align-items: center; */
-  padding-top: 106px;
+  padding-top: 5dvh;
   justify-content: center;
 `
 
 const WebcamContainer = styled.div`
   position: relative;
-  width: 926px;
-  height: 791px;
+  max-width: 926px;
+  max-height: 791px;
+  min-height: 650px;
+  width: 100%;
+  height: 70vh;
 
   video {
     width: 100%;

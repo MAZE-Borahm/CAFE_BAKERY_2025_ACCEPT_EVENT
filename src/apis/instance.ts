@@ -13,8 +13,6 @@ instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = sessionStorage.getItem(LOCAL.TOKEN)
 
-    console.log('config', config)
-
     if (token) config.headers['Authorization'] = `Bearer ${token}`
 
     return config
