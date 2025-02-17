@@ -1,10 +1,9 @@
-// hooks/useLikes.ts
 import { useState, useEffect } from 'react'
 
 const STORAGE_KEY = 'menu_likes_count'
 
 interface LikeCount {
-  [menuName: string]: number
+  [menuId: number]: number
 }
 
 export const useLikes = () => {
@@ -17,15 +16,15 @@ export const useLikes = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(likeCounts))
   }, [likeCounts])
 
-  const toggleLike = (menuName: string) => {
+  const toggleLike = (menuId: number) => {
     setLikeCounts((prev) => ({
       ...prev,
-      [menuName]: (prev[menuName] || 0) + 1,
+      [menuId]: (prev[menuId] || 0) + 1,
     }))
   }
 
-  const getLikeCount = (menuName: string) => {
-    return likeCounts[menuName] || 0
+  const getLikeCount = (menuId: number) => {
+    return likeCounts[menuId] || 0
   }
 
   return { toggleLike, getLikeCount }

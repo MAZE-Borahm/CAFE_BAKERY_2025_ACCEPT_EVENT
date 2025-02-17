@@ -8,9 +8,13 @@ import SvgIcon from '@/components/SvgIcon'
 import { ROUTER } from '@/constants/router'
 
 interface Menu {
+  id: number
+  brand: string
   name: string
   image: string
   description: string
+  flavorProfile?: string
+  gender: string[]
 }
 
 interface LocationState {
@@ -52,8 +56,8 @@ const Result = () => {
             <MenuBottom>
               <p>억셉트커피</p>
               <LikeButton>
-                <SvgIcon name='heart' size={window.innerWidth <= 1280 ? 8 : 12} style={{ transform: 'translateY(1px)' }} />
-                <LikeCount>{getLikeCount(menu.name)}</LikeCount>
+                <SvgIcon name='heart' size={window.innerWidth <= 1920 ? 8 : 12} style={{ transform: 'translateY(1px)' }} />
+                <LikeCount>{getLikeCount(menu.id)}</LikeCount>
               </LikeButton>
             </MenuBottom>
           </MenuItem>
@@ -63,8 +67,7 @@ const Result = () => {
         <SvgIcon name='home' size={window.innerWidth <= 1280 ? 20 : 32} />
         <span>홈으로</span>
       </GoHomeButton>
-
-      {selectedMenu && <MenuModal menu={selectedMenu} onClose={() => setSelectedMenu(null)} onLike={() => toggleLike(selectedMenu.name)} likeCount={getLikeCount(selectedMenu.name)} />}
+      {selectedMenu && <MenuModal menu={selectedMenu} onClose={() => setSelectedMenu(null)} onLike={() => toggleLike(selectedMenu.id)} likeCount={getLikeCount(selectedMenu.id)} />}{' '}
     </Container>
   )
 }

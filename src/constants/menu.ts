@@ -13,7 +13,7 @@ import {
   sausagePastry,
 } from '@/assets/img/bakery'
 import { blackForest, ceo_9, citricCaramel, fruityBerry, hogarden, nutsBerry, panama, tropicalJuice } from '@/assets/img/beans'
-import { americano, cafelatte, einspenner, flatWhite, grapefruitAde, malchaLatteHot, oatmealLatte, singleOrigin, strawberryLatte } from '@/assets/img/drinks'
+import { americano, cafelatte, einspenner, flatWhite, grapefruitAde, malchaLatteHot, oatmealLatte, oreo, singleOrigin, strawberryLatte } from '@/assets/img/drinks'
 
 export const MENU_LIST = [
   /**음료- 커피 */
@@ -96,7 +96,7 @@ export const MENU_LIST = [
     name: '오레오 프라페',
     description: '부드러운 프라페에 바삭한 오레오 크럼블이 더해진 달콤한 음료입니다.',
     gender: ['female', 'male'],
-    image: '',
+    image: oreo,
   },
   //** 원두 */
   {

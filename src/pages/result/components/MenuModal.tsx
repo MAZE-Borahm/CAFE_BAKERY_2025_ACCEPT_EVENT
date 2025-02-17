@@ -5,6 +5,7 @@ interface Menu {
   name: string
   image: string
   description: string
+  flavorProfile?: string
 }
 
 interface MenuModalProps {
@@ -15,6 +16,11 @@ interface MenuModalProps {
 }
 
 const MenuModal = ({ menu, onClose, onLike, likeCount }: MenuModalProps) => {
+  const handleLike = () => {
+    onLike()
+    onClose()
+  }
+
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -22,10 +28,10 @@ const MenuModal = ({ menu, onClose, onLike, likeCount }: MenuModalProps) => {
         <ContentSubHeader>{menu.description}</ContentSubHeader>
         <ModalImage src={menu.image} alt={menu.name} />
         <ModalInfo>
-          <InfoText>해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.</InfoText>
+          <InfoText>{menu.flavorProfile && '해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.'}</InfoText>
           <ButtonGroup>
-            <LikeButton onClick={onLike}>
-              <SvgIcon name='heart' size={window.innerWidth <= 1280 ? 13 : 19} style={{ transform: 'translateY(1px)' }} />
+            <LikeButton onClick={handleLike}>
+              <SvgIcon name='heart' size={window.innerWidth <= 1920 ? 13 : 19} style={{ transform: 'translateY(1px)' }} />
               <span>{likeCount}</span>
             </LikeButton>
             <CloseModalButton onClick={onClose}>닫기</CloseModalButton>
@@ -35,7 +41,6 @@ const MenuModal = ({ menu, onClose, onLike, likeCount }: MenuModalProps) => {
     </ModalOverlay>
   )
 }
-
 export default MenuModal
 
 const ModalOverlay = styled.div`
