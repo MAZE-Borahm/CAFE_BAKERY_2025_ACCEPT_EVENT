@@ -1,0 +1,21 @@
+:root {
+  --white: #ffffff;
+  --black: #171212;
+  --brand: #e51a5c;
+  --line-gray: #e5e8eb;
+  --background-gray: #f5f0f2;
+  --font-dusty-rose: #876370;
+
+  /* 폰트  정의*/
+  --font-size-base: 16px;
+  --font-size-small: 0.875rem;
+  --font-size-large: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-xxl: 1.5rem;
+
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+
+  --line-height-base: 1.5;
+  --line-height-heading: 1.2;
+}
