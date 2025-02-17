@@ -52,7 +52,7 @@ const Result = () => {
             <MenuBottom>
               <p>억셉트커피</p>
               <LikeButton>
-                <SvgIcon name='heart' size={window.innerWidth <= 1280 ? 8 : 12} style={{ transform: 'translateY(1px)' }} />
+                <SvgIcon name='heart' size={window.innerWidth <= 1920 ? 8 : 12} style={{ transform: 'translateY(1px)' }} />
                 <LikeCount>{getLikeCount(menu.name)}</LikeCount>
               </LikeButton>
             </MenuBottom>
@@ -60,7 +60,7 @@ const Result = () => {
         ))}
       </MenuContainer>
       <GoHomeButton onClick={handleGoHomeButton}>
-        <SvgIcon name='home' size={window.innerWidth <= 1280 ? 20 : 32} />
+        <SvgIcon name='home' size={window.innerWidth <= 1920 ? 20 : 32} />
         <span>홈으로</span>
       </GoHomeButton>
 
@@ -75,7 +75,7 @@ const Container = styled.div`
   position: relative;
   padding: 63px 129px 55px 113px;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1920px) {
     padding: 40px 5% 35px 5%;
   }
 `
@@ -86,7 +86,7 @@ const Title = styled.h2`
   font-size: 64px;
   font-weight: 300;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1920px) {
     margin-bottom: 15px;
     font-size: 40px;
   }
@@ -98,7 +98,7 @@ const Subtitle = styled.p`
   font-size: 36px;
   color: #666;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1920px) {
     margin-bottom: 24px;
     font-size: 23px;
   }
@@ -111,9 +111,9 @@ const MenuContainer = styled.div`
   max-width: 1760px;
   margin: 0 auto;
 
-  @media screen and (max-width: 1280px) {
-    gap: clamp(15px, 2vw, 32px);
-    width: 100%;
+  @media screen and (max-width: 1920px) {
+    gap: 20px;
+    width: 90%;
   }
 `
 
@@ -126,13 +126,14 @@ const MenuItem = styled.div`
   cursor: pointer;
   transition: transform 0.2s;
   overflow: hidden;
-
   width: 300px;
   height: 378px;
 
-  @media screen and (max-width: 1280px) {
-    width: clamp(160px, 15vw, 250px);
-    height: clamp(202px, 19vw, 315px);
+  @media screen and (max-width: 1920px) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 300/378; // 원래 비율 유지
+    min-height: 200px; // 너무 작아지지 않도록 최소 높이 설정
   }
 
   &:hover {
@@ -146,9 +147,10 @@ const MenuImage = styled.img`
   object-fit: cover;
   margin-bottom: 0;
 
-  @media screen and (max-width: 1280px) {
-    width: clamp(160px, 15vw, 250px);
-    height: clamp(160px, 15vw, 250px);
+  @media screen and (max-width: 1920px) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1; // 정사각형 비율 유지
   }
 `
 
@@ -161,7 +163,7 @@ const MenuName = styled.span`
   color: #333;
   padding-left: 4px;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1920px) {
     font-size: 11px;
     margin-top: 7px;
   }
@@ -180,7 +182,7 @@ const MenuBottom = styled.div`
     font-weight: 700;
   }
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1920px) {
     margin-top: 7px;
     p {
       font-size: 9px;
@@ -201,7 +203,7 @@ const LikeButton = styled.button`
   font-size: 16px;
   font-weight: 700;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1920px) {
     gap: 8px;
     padding: 3px 6px;
     border-radius: 5px;
@@ -218,7 +220,7 @@ const LikeCount = styled.span`
   color: white;
   font-weight: 600;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1920px) {
     font-size: 10px;
   }
 `
@@ -238,7 +240,7 @@ const GoHomeButton = styled.div`
   color: white;
   cursor: pointer;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1920px) {
     width: 38px;
     height: 38px;
     bottom: 35px;
@@ -248,7 +250,7 @@ const GoHomeButton = styled.div`
 
   span {
     font-size: 12px;
-    @media screen and (max-width: 1280px) {
+    @media screen and (max-width: 1920px) {
       font-size: 8px;
     }
   }
