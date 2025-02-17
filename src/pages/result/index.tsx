@@ -52,7 +52,8 @@ const Result = () => {
             <MenuBottom>
               <p>억셉트커피</p>
               <LikeButton>
-                ♥<LikeCount>{getLikeCount(menu.name)}</LikeCount>
+                <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                <LikeCount>{getLikeCount(menu.name)}</LikeCount>
               </LikeButton>
             </MenuBottom>
           </MenuItem>
