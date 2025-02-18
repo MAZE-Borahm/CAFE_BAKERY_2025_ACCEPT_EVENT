@@ -106,9 +106,9 @@ const ModalContent = styled.div`
   background-color: white;
   border-radius: 24px;
   width: 80%;
-  height: 80%;
+  height: 70%; // 높이를 10% 줄임
   max-width: 1200px;
-  max-height: 900px;
+  max-height: 800px; // 최대 높이도 줄임
   overflow-y: auto;
   padding: 5%;
   display: flex;
@@ -119,32 +119,32 @@ const ModalContent = styled.div`
   @media screen and (max-width: 1280px) {
     width: 90%;
     height: auto;
-    max-height: 90vh;
+    max-height: 85vh; // 모바일에서도 높이 조정
     padding: 40px;
   }
 `
 
 const ContentHeader = styled.h2`
-  font-size: 48px;
+  font-size: 42px; // 조금 줄임
   font-weight: 700;
   margin: 0;
   text-align: center;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 15px; // 간격 줄임
   word-break: keep-all;
   overflow-wrap: break-word;
 
   @media screen and (max-width: 1280px) {
-    font-size: 32px;
-    margin-bottom: 15px;
+    font-size: 28px;
+    margin-bottom: 12px;
   }
 `
 
 const ContentSubHeader = styled.h3`
-  font-size: 32px;
+  font-size: 28px; // 조금 줄임
   font-weight: 400;
   color: #666;
-  margin: 0 0 40px 0;
+  margin: 0 0 30px 0; // 간격 줄임
   text-align: center;
   width: 100%;
   word-break: keep-all;
@@ -152,23 +152,23 @@ const ContentSubHeader = styled.h3`
   line-height: 1.4;
 
   @media screen and (max-width: 1280px) {
-    font-size: 24px;
-    margin-bottom: 30px;
+    font-size: 22px;
+    margin-bottom: 25px;
   }
 `
 
 const ModalImage = styled.img`
   width: auto;
   height: auto;
-  max-width: 60%;
-  max-height: 50%;
+  max-width: 55%; // 이미지 크기 조금 줄임
+  max-height: 45%; // 높이도 조정
   object-fit: contain;
   border-radius: 12px;
-  margin-bottom: 50px;
+  margin-bottom: 40px; // 마진 줄임
 
   @media screen and (max-width: 1280px) {
-    max-width: 80%;
-    margin-bottom: 35px;
+    max-width: 75%;
+    margin-bottom: 30px;
   }
 `
 
@@ -176,89 +176,89 @@ const ModalInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 25px; // 간격 조금 줄임
   width: 100%;
 
   @media screen and (max-width: 1280px) {
-    gap: 25px;
+    gap: 20px;
   }
 `
 
 const AdditionalInfoSection = styled.div`
   width: 100%;
-  max-width: 80%;
+  max-width: 75%; // 조금 줄임
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px; // 간격 줄임
   background-color: #f9f9f9;
-  padding: 30px;
+  padding: 25px; // 패딩 조정
   border-radius: 16px;
 
   @media screen and (max-width: 1280px) {
-    padding: 20px;
-    gap: 20px;
+    padding: 15px;
+    gap: 15px;
   }
 `
 
 const InfoItem = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px; // 간격 조금 줄임
 `
 
 const InfoTitle = styled.h4`
-  font-size: 24px;
+  font-size: 22px; // 조금 줄임
   font-weight: 600;
   color: #333;
   margin: 0;
   word-break: keep-all;
 
   @media screen and (max-width: 1280px) {
-    font-size: 20px;
+    font-size: 18px;
   }
 `
 
 const InfoText = styled.p`
-  font-size: 22px;
+  font-size: 20px; // 조금 줄임
   color: #333;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.5;
   white-space: pre-line;
   word-break: keep-all;
   overflow-wrap: break-word;
 
   @media screen and (max-width: 1280px) {
-    font-size: 18px;
+    font-size: 16px;
   }
 `
 
 const ExperienceText = styled.p`
-  font-size: 22px;
+  font-size: 20px; // 조금 줄임
   color: #666;
   text-align: center;
   margin: 0;
   font-style: italic;
   width: 100%;
-  max-width: 80%;
+  max-width: 75%; // 조금 줄임
   white-space: pre-line;
   word-break: keep-all;
   overflow-wrap: break-word;
-  line-height: 1.6;
+  line-height: 1.5;
 
   @media screen and (max-width: 1280px) {
-    font-size: 18px;
+    font-size: 16px;
   }
 `
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 24px;
+  gap: 20px; // 간격 조금 줄임
   justify-content: center;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 8px; // 마진 줄임
 
   @media screen and (max-width: 1280px) {
-    gap: 16px;
+    gap: 14px;
   }
 `
 
@@ -271,22 +271,22 @@ const LikeButton = styled.div<LikeButtonProps>`
   color: white;
   border: none;
   cursor: pointer;
-  padding: 15px 30px;
+  padding: 12px 25px; // 패딩 조금 줄임
   border-radius: 12px;
-  font-size: 22px;
+  font-size: 20px; // 폰트 크기 조정
   font-weight: 600;
-  min-width: 140px;
+  min-width: 130px; // 최소 너비 조정
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 14px; // 간격 조정
   transition: all 0.2s ease;
 
   @media screen and (max-width: 1280px) {
-    padding: 12px 20px;
-    font-size: 18px;
-    min-width: 110px;
-    gap: 12px;
+    padding: 10px 18px;
+    font-size: 16px;
+    min-width: 100px;
+    gap: 10px;
   }
 
   &:hover {
@@ -300,17 +300,17 @@ const CloseModalButton = styled.button`
   color: white;
   border: none;
   cursor: pointer;
-  padding: 15px 30px;
+  padding: 12px 25px; // 패딩 조금 줄임
   border-radius: 12px;
-  font-size: 22px;
+  font-size: 20px; // 폰트 크기 조정
   font-weight: 600;
-  min-width: 140px;
+  min-width: 130px; // 최소 너비 조정
   transition: background-color 0.2s ease, transform 0.2s ease;
 
   @media screen and (max-width: 1280px) {
-    padding: 12px 20px;
-    font-size: 18px;
-    min-width: 110px;
+    padding: 10px 18px;
+    font-size: 16px;
+    min-width: 100px;
   }
 
   &:hover {

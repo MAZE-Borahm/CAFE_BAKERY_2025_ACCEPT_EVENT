@@ -208,7 +208,7 @@ const MenuItem = styled.div`
 `
 
 const MenuName = styled.span`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   margin-top: 11px;
   text-align: left;
@@ -226,7 +226,7 @@ const MenuBottom = styled.div`
   padding: 0 4px;
 
   p {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 700;
   }
 `
