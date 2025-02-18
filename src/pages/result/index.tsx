@@ -98,7 +98,7 @@ const Result = React.memo(() => {
               <MenuBottom>
                 <p>{menu.brand}</p>
                 <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
-                  <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                  <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
                   <LikeCount>{getLikeCount(menu.id)}</LikeCount>
                 </LikeButton>
               </MenuBottom>
@@ -115,7 +115,7 @@ const Result = React.memo(() => {
               <MenuBottom>
                 <p>{menu.brand}</p>
                 <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
-                  <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                  <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
                   <LikeCount>{getLikeCount(menu.id)}</LikeCount>
                 </LikeButton>
               </MenuBottom>
@@ -132,7 +132,7 @@ const Result = React.memo(() => {
               <MenuBottom>
                 <p>{menu.brand}</p>
                 <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
-                  <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                  <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
                   <LikeCount>{getLikeCount(menu.id)}</LikeCount>
                 </LikeButton>
               </MenuBottom>
@@ -149,7 +149,7 @@ const Result = React.memo(() => {
               <MenuBottom>
                 <p>{menu.brand}</p>
                 <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
-                  <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                  <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
                   <LikeCount>{getLikeCount(menu.id)}</LikeCount>
                 </LikeButton>
               </MenuBottom>

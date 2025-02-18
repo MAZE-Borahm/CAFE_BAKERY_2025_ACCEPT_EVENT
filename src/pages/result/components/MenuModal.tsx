@@ -33,7 +33,6 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: Men
     e.stopPropagation()
   }, [])
 
-  // 모달이 열릴 때 body에 overflow: hidden 적용, 닫힐 때 제거
   useEffect(() => {
     document.body.style.overflow = 'hidden'
 
@@ -52,7 +51,7 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: Men
           <InfoText>{menu.flavorProfile && '해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.'}</InfoText>
           <ButtonGroup>
             <LikeButton onClick={handleLike} active={isLiked}>
-              <SvgIcon name='heart' size={ICON_SIZE} style={{ transform: 'translateY(1px)' }} />
+              <SvgIcon name={isLiked ? 'fillHeart' : 'heart'} size={ICON_SIZE} style={{ transform: 'translateY(1px)' }} />
               <span>{likeCount}</span>
             </LikeButton>
             <CloseModalButton onClick={onClose}>닫기</CloseModalButton>
