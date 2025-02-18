@@ -5,13 +5,11 @@ import styled from 'styled-components'
 import { analyzeGender } from '@/apis/genderApi'
 import { Logo } from '@/assets/img'
 import { ROUTER } from '@/constants/router'
-import Lottie from 'lottie-react'
-import loadingAnimation from '@/assets/animations/Animation.json'
 
 const CameraCapture = () => {
   const navigate = useNavigate()
   const webcamRef = useRef<Webcam>(null)
-  const [photos, setPhotos] = useState<string[]>([])
+  const [, setPhotos] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const [hasPermission, setHasPermission] = useState(false)
 
@@ -96,7 +94,6 @@ const CameraCapture = () => {
         />
         <WebcamOverlay>
           <div>
-            <Lottie animationData={loadingAnimation} />
             <h1>귀하의 특성을 분석중입니다.</h1>
             <p>화면을 바라봐주세요</p>
           </div>
@@ -122,9 +119,7 @@ const Container = styled.div`
 
 const WebcamContainer = styled.div`
   position: relative;
-  max-width: 926px;
-  max-height: 791px;
-  width: 55dvw;
+  width: 70dvw;
   height: 70dvh;
 
   video {
