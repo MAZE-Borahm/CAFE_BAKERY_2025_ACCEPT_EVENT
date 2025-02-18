@@ -85,7 +85,7 @@ const Result = React.memo(() => {
             <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
             <MenuName>{menu.name}</MenuName>
             <MenuBottom>
-              <p>억셉트커피</p>
+              <p>{menu.brand}</p>
               <LikeButton>
                 <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
                 <LikeCount>{getLikeCount(menu.id)}</LikeCount>

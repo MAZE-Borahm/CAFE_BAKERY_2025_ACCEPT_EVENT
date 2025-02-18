@@ -1,4 +1,4 @@
-// type brandType = 'acceptCoffee' | 'belle'
+// type brandType = '억셉트커피' | '벨르블랑제리'
 
 import {
   almondCroissants,
@@ -19,7 +19,7 @@ export const MENU_LIST = [
   /**음료- 커피 */
   {
     id: 1,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '싱글 오리진 커피',
     description: '각국 다양한 원산지, 품종, 가공방식의 커피를 경험할 수 있습니다.',
     gender: ['female', 'male'],
@@ -27,7 +27,7 @@ export const MENU_LIST = [
   },
   {
     id: 2,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '아메리카노',
     description: '깊은 풍미의 에스프레소와 물이 조화를 이루는 기본 커피 메뉴입니다.',
     gender: ['female', 'male'],
@@ -35,7 +35,7 @@ export const MENU_LIST = [
   },
   {
     id: 3,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '카페 라떼',
     description: '부드러운 우유와 조화로운 에스프레소가 어우러진 클래식한 라떼입니다.',
     gender: ['female'],
@@ -43,7 +43,7 @@ export const MENU_LIST = [
   },
   {
     id: 4,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '플랫 화이트',
     description: '우유 양이 적어 커피 본연의 풍미와 부드러운 텍스처가 돋보이는 메뉴입니다.',
     gender: ['female'],
@@ -51,7 +51,7 @@ export const MENU_LIST = [
   },
   {
     id: 5,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '아인슈페너',
     description: '블랙커피 위에 크림을 얹은 달콤하고 부드러운 커피 음료입니다.',
     gender: ['female'],
@@ -60,7 +60,7 @@ export const MENU_LIST = [
   /**음료- 베버리지 */
   {
     id: 6,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '딸기 라떼',
     description: '딸기의 상큼한 단맛과 우유가 조화를 이루는 인기 메뉴입니다.',
     gender: ['female', 'male'],
@@ -68,7 +68,7 @@ export const MENU_LIST = [
   },
   {
     id: 7,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '말차 라떼',
     description: '진한 말차의 씁쓸함과 우유의 부드러운 단맛이 조화를 이룬 건강한 라떼입니다.',
     gender: ['female', 'male'],
@@ -76,7 +76,7 @@ export const MENU_LIST = [
   },
   {
     id: 8,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '오트 라떼',
     description: '고소한 오트밀크와 에스프레소가 만나 가볍고 부드러운 풍미를 느낄 수 있습니다.',
     gender: ['female', 'male'],
@@ -84,7 +84,7 @@ export const MENU_LIST = [
   },
   {
     id: 9,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '자몽 에이드',
     description: '상큼한 자몽과 탄산수가 어우러져 청량감이 뛰어난 상쾌한 음료입니다.',
     gender: ['female', 'male'],
@@ -92,7 +92,7 @@ export const MENU_LIST = [
   },
   {
     id: 10,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '오레오 프라페',
     description: '부드러운 프라페에 바삭한 오레오 크럼블이 더해진 달콤한 음료입니다.',
     gender: ['female', 'male'],
@@ -101,7 +101,7 @@ export const MENU_LIST = [
   //** 원두 */
   {
     id: 11,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: 'C타입 블랙포레스트',
     description: '각국의 다양한 원산지, 품종, 가공 방식을 통해 다채로운 커피 풍미를 경험할 수 있는 블렌드입니다.',
     gender: ['male'],
@@ -111,7 +111,7 @@ export const MENU_LIST = [
   },
   {
     id: 12,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: 'B타입 시트릭카라멜',
     description: '밝고 경쾌한 산미와 달콤한 카라멜 풍미가 조화를 이루는 블렌드입니다. 다양한 원산지의 고품질 원두를 엄선해 블렌딩했습니다.',
     gender: ['female', 'male'],
@@ -121,7 +121,7 @@ export const MENU_LIST = [
   },
   {
     id: 13,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: 'P타입 너츠베리',
     description: '고소한 너츠 향과 달콤한 베리류의 과일향이 조화된 블렌드입니다.',
     gender: ['female', 'male'],
@@ -131,7 +131,7 @@ export const MENU_LIST = [
   },
   {
     id: 14,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: 'F타입 프루티 베리',
     description: '싱그러운 과일 향과 상큼한 베리류의 풍미가 돋보이는 블렌드입니다.',
     gender: ['female'],
@@ -141,7 +141,7 @@ export const MENU_LIST = [
   },
   {
     id: 14,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '트로피칼 주스 원두',
     description: '트로피컬 과일의 밝고 상큼한 향미가 특징인 블렌드입니다.',
     gender: ['female'],
@@ -151,7 +151,7 @@ export const MENU_LIST = [
   },
   {
     id: 15,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '호가든',
     description: '고급진 홍차의 뉘앙스와 시트러스함, 부드러운 단맛과 과실의 맛과 향, 모두가 즐기기 위하는 마음에 만들어진 블렌딩 입니다.',
     gender: ['female', 'male'],
@@ -160,7 +160,7 @@ export const MENU_LIST = [
   },
   {
     id: 16,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '파나마 앤썸 게이샤 내추럴',
     description: '파나마의 최상급 게이샤 품종으로, 내추럴 가공 방식으로 과일향과 꽃향이 극대화된 커피입니다',
     gender: ['female', 'male'],
@@ -170,7 +170,7 @@ export const MENU_LIST = [
   },
   {
     id: 17,
-    brand: 'acceptCoffee',
+    brand: '억셉트커피',
     name: '과테말라 COE 9위 - 몬타나 엘라다 게이샤 워시드',
     description: '각국의 다양한 원산지, 품종, 가공방식 중에서도 최고 수준의 품질을 인정받은 과테말라 COE 9위 수상 커피입니다.',
     gender: ['female', 'male'],
@@ -181,7 +181,7 @@ export const MENU_LIST = [
   /**빵 */
   {
     id: 18,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '아몬드 크로와상',
     description: '구운아몬드의 고소함과 프랑스 버터 풍미가 가득한 크로와상.',
     gender: ['male'],
@@ -189,7 +189,7 @@ export const MENU_LIST = [
   },
   {
     id: 19,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '갈릭 크로와상',
     description: '갖 구운 크로와상에 갈릭소스와 크림치즈를 입혀 알싸함과 부드러운 크림치즈 2가지 맛을 느낄수 있는 베이커리',
     gender: ['male'],
@@ -197,7 +197,7 @@ export const MENU_LIST = [
   },
   {
     id: 20,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '초코뱅오 쇼콜라',
     description: '초콜릿의 달콤함과 버터리한 뱅오의 절묘한 만남!',
     gender: ['male'],
@@ -205,7 +205,7 @@ export const MENU_LIST = [
   },
   {
     id: 21,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '소시지 페스트리',
     description: '소시지 고유의 맛을 잘살리고, 페스츄리의 담백함을 동시에 느낄수있어 남녀노소 누구나 선호하는 베이커리',
     gender: ['male'],
@@ -213,7 +213,7 @@ export const MENU_LIST = [
   },
   {
     id: 22,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '쪽파크림치즈 소금빵',
     description: '쫄깃한 소금빵에 느끼함이 없는 특제 쪽파크림치즈와 베이컨의 조화',
     gender: ['male'],
@@ -221,7 +221,7 @@ export const MENU_LIST = [
   },
   {
     id: 23,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '블루베리 크림치즈 크로넛',
     description: '크림치즈와 블루베리 글레이즈가 더해져 달달한 블루베리 풍미를 느낄 수 있는 페스츄리!',
     gender: ['female'],
@@ -229,7 +229,7 @@ export const MENU_LIST = [
   },
   {
     id: 24,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '하겔슈가 몽블랑',
     description: '우뚝 솟은 산맥모양으로 본떠 만든 페스츄리 빵에 오렌지 시럽을첨가해 입안에 오랫동안 감도는페스츄리!',
     gender: ['female', 'male'],
@@ -237,7 +237,7 @@ export const MENU_LIST = [
   },
   {
     id: 25,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '애플크림치즈파이',
     description: '사과파이필링과 크림치즈를 입혀 풍미가 감도는 파이!',
     gender: ['female', 'male'],
@@ -245,7 +245,7 @@ export const MENU_LIST = [
   },
   {
     id: 26,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '브리오슈',
     description: '부드럽고 버터풍미가득한 브리오슈에 크림 한가득 느낄수있는 베이커리',
     gender: ['female', 'male'],
@@ -253,7 +253,7 @@ export const MENU_LIST = [
   },
   {
     id: 27,
-    brand: 'belle',
+    brand: '벨르블랑제리',
     name: '바질 샌드위치',
     description: '올리브유와 신선한 바질의 향이 진하게 풍기는 샌드위치',
     gender: ['female'],
