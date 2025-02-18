@@ -12,6 +12,8 @@ const CameraCapture = () => {
   const [, setPhotos] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const [hasPermission, setHasPermission] = useState(false)
+  const [remainingPhotos, setRemainingPhotos] = useState<number>(0)
+  const [isCapturing, setIsCapturing] = useState<boolean>(false)
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
@@ -27,10 +29,14 @@ const CameraCapture = () => {
     if (!webcamRef.current || !hasPermission) return
     setPhotos([])
     setError(null)
+    setIsCapturing(true)
+    setRemainingPhotos(5)
 
     try {
       const newPhotos: string[] = []
+
       for (let i = 0; i < 5; i++) {
+        setRemainingPhotos(5 - i)
         await new Promise((resolve) => setTimeout(resolve, 1000))
         const photo = capture()
         if (photo) {
@@ -38,6 +44,9 @@ const CameraCapture = () => {
           setPhotos((prev) => [...prev, photo])
         }
       }
+
+      setIsCapturing(false)
+      setRemainingPhotos(0)
 
       if (newPhotos.length === 5) {
         try {
@@ -51,10 +60,14 @@ const CameraCapture = () => {
           console.error('분석 중 에러:', error)
           setError('분석 중 오류가 발생했습니다.')
         }
+      } else {
+        setError('모든 사진을 촬영하지 못했습니다. 다시 시도해주세요.')
       }
     } catch (error) {
       console.error('사진 촬영 중 에러:', error)
       setError('사진 촬영 중 오류가 발생했습니다.')
+      setIsCapturing(false)
+      setRemainingPhotos(0)
     }
   }, [capture, navigate, hasPermission])
 
@@ -95,7 +108,10 @@ const CameraCapture = () => {
         <WebcamOverlay>
           <div>
             <h1>귀하의 특성을 분석중입니다.</h1>
-            <p>화면을 바라봐주세요</p>
+            <p>
+              화면을 바라봐주세요
+              {isCapturing && remainingPhotos > 0 && <CountBadge>{remainingPhotos}</CountBadge>}
+            </p>
           </div>
         </WebcamOverlay>
       </WebcamContainer>
@@ -140,38 +156,18 @@ const WebcamOverlay = styled.div`
   border-radius: 48px;
   display: flex;
   justify-content: center;
-  align-items: center; // 다시 center로 변경
+  align-items: center;
   pointer-events: none;
 
   div {
     display: flex;
     flex-direction: column;
-    align-items: center; // 추가
+    align-items: center;
     gap: 29px;
     text-align: center;
-    width: 100%; // 추가
-    height: 100%; // 추가
-    justify-content: center; // 추가
-
-    // Lottie 애니메이션을 위한 스타일
-    > div:first-child {
-      position: absolute;
-      width: 400px;
-      height: 400px;
-
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-
-      margin-bottom: 0;
-      @media screen and (max-width: 1280px) {
-        width: 250px !important; // !important로 인라인 스타일 덮어쓰기
-        height: 250px !important;
-        top: 45%;
-        left: 50%;
-        transform: translate(-45%, -50%);
-      }
-    }
+    width: 100%;
+    height: 100%;
+    justify-content: center;
 
     // 텍스트 컨테이너
     > h1,
@@ -199,12 +195,37 @@ const WebcamOverlay = styled.div`
       font-size: 40px;
       color: white;
       font-weight: 800;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
 
       @media screen and (max-width: 1280px) {
         font-size: 28px;
         bottom: 40px;
       }
     }
+  }
+`
+
+const CountBadge = styled.span`
+  display: inline-block;
+  min-width: 36px;
+  height: 36px;
+  line-height: 36px;
+  border-radius: 18px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 24px;
+  margin-left: 8px;
+  font-weight: 600;
+  vertical-align: middle;
+
+  @media screen and (max-width: 1280px) {
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 20px;
   }
 `
 
