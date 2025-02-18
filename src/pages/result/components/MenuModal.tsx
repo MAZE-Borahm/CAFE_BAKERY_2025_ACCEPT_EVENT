@@ -1,21 +1,5 @@
-import SvgIcon from '@/components/SvgIcon'
-import styled from 'styled-components'
-
-interface Menu {
-  name: string
-  image: string
-  description: string
-  flavorProfile?: string
-}
-
-interface MenuModalProps {
-  menu: Menu
-  onClose: () => void
-  onLike: () => void
-  likeCount: number
-}
-
 import React, { useCallback } from 'react'
+
 import SvgIcon from '@/components/SvgIcon'
 import styled from 'styled-components'
 

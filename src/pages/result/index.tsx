@@ -19,7 +19,7 @@ interface Menu {
 
 interface LocationState {
   result: {
-    gender: 'male' | 'female'
+    gender: 'male' | 'female' | 'unknown'
   }
 }
 
@@ -52,10 +52,19 @@ const Result = React.memo(() => {
   const result = (location.state as LocationState)?.result
 
   // 메모이제이션된 필터링된 메뉴
-  const filteredMenus = useMemo(() => MENU_LIST.filter((menu) => menu.gender.includes(result?.gender || 'female')), [result?.gender])
+  const filteredMenus = useMemo(() => {
+    const defaultGender = 'female'
+    const gender = result?.gender === 'male' ? 'male' : defaultGender
+    return MENU_LIST.filter((menu) => menu.gender.includes(gender))
+  }, [result?.gender])
 
   // 메모이제이션된 타이틀 텍스트
-  const titleText = useMemo(() => ((result?.gender ?? 'female') === 'male' ? '남성이시군요! 아래 메뉴를 추천해 드립니다~!' : '여성이시군요! 아래 메뉴를 추천해 드립니다~!'), [result?.gender])
+  const titleText = useMemo(() => {
+    if (result?.gender === 'male') {
+      return '남성이시군요! 아래 메뉴를 추천해 드립니다~!'
+    }
+    return '여성이시군요! 아래 메뉴를 추천해 드립니다~!'
+  }, [result?.gender])
 
   // useCallback으로 메모이제이션된 핸들러
   const handleMenuClick = useCallback((menu: Menu) => {
@@ -127,16 +136,24 @@ const MenuContainer = styled.div`
 const MenuItem = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center; // 중앙 정렬을 위해 변경
   cursor: pointer;
   transition: transform 0.2s;
   overflow: hidden;
+  width: 100%; // 너비 100% 설정
 
   &:hover {
     transform: scale(1.02);
   }
-`
 
+  img {
+    width: 100%; // 이미지 너비를 컨테이너에 맞춤
+    height: auto; // 비율 유지
+    aspect-ratio: 1; // 1:1 비율 유지
+    object-fit: cover; // 이미지가 컨테이너를 꽉 채우도록
+    border-radius: 8px; // 선택적: 이미지 모서리 둥글게
+  }
+`
 const MenuName = styled.span`
   font-size: 18px;
   font-weight: 400;
