@@ -46,7 +46,7 @@ const LazyImage = React.memo(({ src, alt, ...props }: React.ImgHTMLAttributes<HT
 
 const Result = React.memo(() => {
   const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null)
-  const { toggleLike, getLikeCount } = useLikes()
+  const { toggleLike, getLikeCount, isLiked } = useLikes()
   const location = useLocation()
   const navigation = useNavigate()
   const result = (location.state as LocationState)?.result
@@ -73,6 +73,15 @@ const Result = React.memo(() => {
     navigation(ROUTER.MAIN)
   }, [navigation])
 
+  // 좋아요 버튼 클릭 핸들러
+  const handleLikeClick = useCallback(
+    (e: React.MouseEvent, menuId: number) => {
+      e.stopPropagation() // 메뉴 클릭 이벤트가 발생하지 않도록 함
+      toggleLike(menuId)
+    },
+    [toggleLike]
+  )
+
   return (
     <Container>
       <Title>
@@ -88,7 +97,7 @@ const Result = React.memo(() => {
               <MenuName>{menu.name}</MenuName>
               <MenuBottom>
                 <p>{menu.brand}</p>
-                <LikeButton>
+                <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
                   <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
                   <LikeCount>{getLikeCount(menu.id)}</LikeCount>
                 </LikeButton>
@@ -105,7 +114,7 @@ const Result = React.memo(() => {
               <MenuName>{menu.name}</MenuName>
               <MenuBottom>
                 <p>{menu.brand}</p>
-                <LikeButton>
+                <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
                   <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
                   <LikeCount>{getLikeCount(menu.id)}</LikeCount>
                 </LikeButton>
@@ -122,7 +131,7 @@ const Result = React.memo(() => {
               <MenuName>{menu.name}</MenuName>
               <MenuBottom>
                 <p>{menu.brand}</p>
-                <LikeButton>
+                <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
                   <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
                   <LikeCount>{getLikeCount(menu.id)}</LikeCount>
                 </LikeButton>
@@ -139,7 +148,7 @@ const Result = React.memo(() => {
               <MenuName>{menu.name}</MenuName>
               <MenuBottom>
                 <p>{menu.brand}</p>
-                <LikeButton>
+                <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
                   <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
                   <LikeCount>{getLikeCount(menu.id)}</LikeCount>
                 </LikeButton>
@@ -153,7 +162,9 @@ const Result = React.memo(() => {
         <SvgIcon name='home' size={20} />
         <span>홈으로</span>
       </GoHomeButton>
-      {selectedMenu && <MenuModal menu={selectedMenu} onClose={() => setSelectedMenu(null)} onLike={() => toggleLike(selectedMenu.id)} likeCount={getLikeCount(selectedMenu.id)} />}
+      {selectedMenu && (
+        <MenuModal menu={selectedMenu} onClose={() => setSelectedMenu(null)} onLike={() => toggleLike(selectedMenu.id)} likeCount={getLikeCount(selectedMenu.id)} isLiked={isLiked(selectedMenu.id)} />
+      )}
     </Container>
   )
 })
@@ -252,8 +263,12 @@ const MenuBottom = styled.div`
   }
 `
 
-const LikeButton = styled.button`
-  background: #ff0000cc;
+interface LikeButtonProps {
+  active: boolean
+}
+
+const LikeButton = styled.button<LikeButtonProps>`
+  background: ${(props) => (props.active ? '#ff3333' : '#ff0000cc')};
   color: white;
   border: none;
   cursor: pointer;
@@ -264,6 +279,7 @@ const LikeButton = styled.button`
   border-radius: 8px;
   font-size: 16px;
   font-weight: 700;
+  transition: all 0.2s ease;
 
   &:hover {
     background-color: #ff3333;

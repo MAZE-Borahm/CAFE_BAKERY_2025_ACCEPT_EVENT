@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect } from 'react'
-
 import SvgIcon from '@/components/SvgIcon'
 import styled from 'styled-components'
 
@@ -18,21 +17,13 @@ interface MenuModalProps {
   onClose: () => void
   onLike: () => void
   likeCount: number
+  isLiked: boolean
 }
 
-const MenuModal = React.memo(({ menu, onClose, onLike, likeCount }: MenuModalProps) => {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden'
-
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [])
-
+const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: MenuModalProps) => {
   const handleLike = useCallback(() => {
     onLike()
-    onClose()
-  }, [onLike, onClose])
+  }, [onLike])
 
   const handleOverlayClick = useCallback(() => {
     onClose()
@@ -40,6 +31,15 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount }: MenuModalPro
 
   const handleContentClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
+  }, [])
+
+  // 모달이 열릴 때 body에 overflow: hidden 적용, 닫힐 때 제거
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = ''
+    }
   }, [])
 
   return (
@@ -51,7 +51,7 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount }: MenuModalPro
         <ModalInfo>
           <InfoText>{menu.flavorProfile && '해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.'}</InfoText>
           <ButtonGroup>
-            <LikeButton onClick={handleLike}>
+            <LikeButton onClick={handleLike} active={isLiked}>
               <SvgIcon name='heart' size={ICON_SIZE} style={{ transform: 'translateY(1px)' }} />
               <span>{likeCount}</span>
             </LikeButton>
@@ -65,8 +65,7 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount }: MenuModalPro
 
 export default MenuModal
 
-// 기존 styled-components 코드 그대로 유지
-
+// 스타일드 컴포넌트
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -91,6 +90,7 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
   @media screen and (max-width: 1280px) {
     width: 400px;
@@ -171,8 +171,12 @@ const ButtonGroup = styled.div`
   }
 `
 
-const LikeButton = styled.div`
-  background: #ff0000cc;
+interface LikeButtonProps {
+  active: boolean
+}
+
+const LikeButton = styled.div<LikeButtonProps>`
+  background: ${(props) => (props.active ? '#ff3333' : '#ff0000cc')};
   color: white;
   border: none;
   cursor: pointer;
@@ -185,6 +189,7 @@ const LikeButton = styled.div`
   align-items: center;
   justify-content: center;
   gap: 12px;
+  transition: all 0.2s ease;
 
   @media screen and (max-width: 1280px) {
     padding: 8px 17px;
@@ -195,6 +200,7 @@ const LikeButton = styled.div`
 
   &:hover {
     background-color: #ff3333;
+    transform: scale(1.02);
   }
 `
 
@@ -208,6 +214,7 @@ const CloseModalButton = styled.button`
   font-size: 18px;
   font-weight: 600;
   min-width: 120px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 
   @media screen and (max-width: 1280px) {
     padding: 8px 17px;
@@ -217,5 +224,6 @@ const CloseModalButton = styled.button`
 
   &:hover {
     background-color: #444;
+    transform: scale(1.02);
   }
 `
