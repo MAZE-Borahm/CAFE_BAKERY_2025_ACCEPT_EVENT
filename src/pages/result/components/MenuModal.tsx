@@ -47,7 +47,9 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: Men
     <ModalOverlay onClick={handleOverlayClick}>
       <ModalContent onClick={handleContentClick}>
         <ContentHeader>{menu.name}</ContentHeader>
-        <ContentSubHeader>{menu.description}</ContentSubHeader>
+        <div style={{ width: '100%', padding: '0 30px' }}>
+          <ContentSubHeader>{menu.description}</ContentSubHeader>
+        </div>
         <ModalInfo>
           <ModalScrollWrapper>
             <ModalImage src={menu.image} alt={menu.name} loading='lazy' />
@@ -145,6 +147,7 @@ const ContentSubHeader = styled.h3`
   font-weight: 400;
   color: #666;
   margin: 0 0 30px 0;
+
   /* text-align: center; */
   width: 100%;
   word-break: keep-all;
