@@ -231,7 +231,7 @@ const MenuItem = styled.div`
 `
 
 const MenuName = styled.span`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
   margin-top: 11px;
   text-align: left;
