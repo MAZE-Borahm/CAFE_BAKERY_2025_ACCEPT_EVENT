@@ -1,3 +1,4 @@
 import Logo from './acceptLogo.png'
-
-export { Logo }
+import acceptTextLogo from './acceptTextLogo.png'
+import belleLogo from './belleLogo.png'
+export { Logo, acceptTextLogo, belleLogo }

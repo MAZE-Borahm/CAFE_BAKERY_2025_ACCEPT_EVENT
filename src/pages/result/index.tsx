@@ -6,6 +6,7 @@ import MenuModal from './components/MenuModal'
 import { useLocation, useNavigate } from 'react-router-dom'
 import SvgIcon from '@/components/SvgIcon'
 import { ROUTER } from '@/constants/router'
+import { acceptTextLogo, belleLogo } from '@/assets/img'
 
 interface Menu {
   id: number
@@ -125,10 +126,30 @@ const Result = React.memo(() => {
       </Title>
       <Subtitle>메뉴를 터치하시면 상세 정보를 보실 수 있습니다.</Subtitle>
       <FourColumnLayout>
-        <MenuColumn>{firstHalfDrinks.map(renderMenuItem)}</MenuColumn>
-        <MenuColumn>{secondHalfDrinks.map(renderMenuItem)}</MenuColumn>
-        <MenuColumn>{firstHalfBakery.map(renderMenuItem)}</MenuColumn>
-        <MenuColumn>{secondHalfBakery.map(renderMenuItem)}</MenuColumn>
+        <MenuColumn>
+          <ColumnTitle>
+            <img src={acceptTextLogo} style={{ width: 200, height: 47 }} />
+          </ColumnTitle>
+          {firstHalfDrinks.map(renderMenuItem)}
+        </MenuColumn>
+
+        <MenuColumn>
+          <ColumnTitle style={{ height: 47 }}>&nbsp;</ColumnTitle>
+          {secondHalfDrinks.map(renderMenuItem)}
+        </MenuColumn>
+
+        <MenuColumn>
+          <ColumnTitle style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+            <img src={belleLogo} style={{ height: 47 }} />
+            Belleboulangerie
+          </ColumnTitle>
+          {firstHalfBakery.map(renderMenuItem)}
+        </MenuColumn>
+
+        <MenuColumn>
+          <ColumnTitle style={{ height: 47 }}>&nbsp;</ColumnTitle>
+          {secondHalfBakery.map(renderMenuItem)}
+        </MenuColumn>
       </FourColumnLayout>
 
       <GoHomeButton onClick={handleGoHomeButton}>
@@ -185,6 +206,14 @@ const MenuColumn = styled.div`
   min-width: 0; /* 자식 요소가 부모 영역을 넘어가지 않도록 설정 */
 `
 
+const ColumnTitle = styled.h3`
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+  min-height: 30px; // 빈 공간에 대한 공백 유지
+`
+
 const MenuItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -208,7 +237,7 @@ const MenuItem = styled.div`
 `
 
 const MenuName = styled.span`
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 400;
   margin-top: 11px;
   text-align: left;
@@ -226,7 +255,7 @@ const MenuBottom = styled.div`
   padding: 0 4px;
 
   p {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
   }
 `
