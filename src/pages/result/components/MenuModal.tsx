@@ -3,13 +3,15 @@ import SvgIcon from '@/components/SvgIcon'
 import styled from 'styled-components'
 
 // 상수 정의
-const ICON_SIZE = window.innerWidth <= 1920 ? 13 : 19
+const ICON_SIZE = window.innerWidth <= 1920 ? 16 : 22
 
 interface Menu {
   name: string
   image: string
   description: string
   flavorProfile?: string
+  brewingRecommendation?: string
+  brand: string
 }
 
 interface MenuModalProps {
@@ -48,7 +50,27 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: Men
         <ContentSubHeader>{menu.description}</ContentSubHeader>
         <ModalImage src={menu.image} alt={menu.name} loading='lazy' />
         <ModalInfo>
-          <InfoText>{menu.flavorProfile && '해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.'}</InfoText>
+          {(menu.flavorProfile || menu.brewingRecommendation) && (
+            <AdditionalInfoSection>
+              {menu.flavorProfile && (
+                <InfoItem>
+                  <InfoTitle>맛 프로파일</InfoTitle>
+                  <InfoText>{menu.flavorProfile}</InfoText>
+                </InfoItem>
+              )}
+              {menu.brewingRecommendation && (
+                <InfoItem>
+                  <InfoTitle>특징</InfoTitle>
+                  <InfoText>{menu.brewingRecommendation}</InfoText>
+                </InfoItem>
+              )}
+            </AdditionalInfoSection>
+          )}
+
+          {/* 실물 경험 텍스트 - 별도로 배치 */}
+          {menu.brand === '억셉트커피' && <ExperienceText>해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.</ExperienceText>}
+          {menu.brand === '벨르블랑제리' && <ExperienceText></ExperienceText>}
+
           <ButtonGroup>
             <LikeButton onClick={handleLike} active={isLiked}>
               <SvgIcon name={isLiked ? 'fillHeart' : 'heart'} size={ICON_SIZE} style={{ transform: 'translateY(1px)' }} />
@@ -76,62 +98,77 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 2%;
 `
 
 const ModalContent = styled.div`
   position: relative;
   background-color: white;
   border-radius: 24px;
-  width: 568px;
-  max-height: 90vh;
+  width: 80%;
+  height: 80%;
+  max-width: 1200px;
+  max-height: 900px;
   overflow-y: auto;
-  padding: 56px 40px 49px 40px;
+  padding: 5%;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
   @media screen and (max-width: 1280px) {
-    width: 400px;
-    padding: 39px 28px 35px 28px;
+    width: 90%;
+    height: auto;
+    max-height: 90vh;
+    padding: 40px;
   }
 `
 
 const ContentHeader = styled.h2`
-  font-size: 36px;
+  font-size: 48px;
   font-weight: 700;
   margin: 0;
   text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 
   @media screen and (max-width: 1280px) {
-    font-size: 25px;
+    font-size: 32px;
+    margin-bottom: 15px;
   }
 `
 
 const ContentSubHeader = styled.h3`
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 400;
   color: #666;
-  margin: 16px 0 22px;
+  margin: 0 0 40px 0;
   text-align: center;
+  width: 100%;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-height: 1.4;
 
   @media screen and (max-width: 1280px) {
-    font-size: 17px;
-    margin: 11px 0 15px;
+    font-size: 24px;
+    margin-bottom: 30px;
   }
 `
 
 const ModalImage = styled.img`
-  width: 296px;
-  height: 296px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 42px;
+  width: auto;
+  height: auto;
+  max-width: 60%;
+  max-height: 50%;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-bottom: 50px;
 
   @media screen and (max-width: 1280px) {
-    width: 209px;
-    height: 209px;
-    margin-bottom: 30px;
+    max-width: 80%;
+    margin-bottom: 35px;
   }
 `
 
@@ -139,34 +176,89 @@ const ModalInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 30px;
+  width: 100%;
 
   @media screen and (max-width: 1280px) {
-    gap: 17px;
+    gap: 25px;
+  }
+`
+
+const AdditionalInfoSection = styled.div`
+  width: 100%;
+  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background-color: #f9f9f9;
+  padding: 30px;
+  border-radius: 16px;
+
+  @media screen and (max-width: 1280px) {
+    padding: 20px;
+    gap: 20px;
+  }
+`
+
+const InfoItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+
+const InfoTitle = styled.h4`
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  word-break: keep-all;
+
+  @media screen and (max-width: 1280px) {
+    font-size: 20px;
   }
 `
 
 const InfoText = styled.p`
-  font-size: 18px;
-  margin-bottom: 33px;
+  font-size: 22px;
   color: #333;
-  text-align: center;
   margin: 0;
+  line-height: 1.6;
+  white-space: pre-line;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 
   @media screen and (max-width: 1280px) {
-    font-size: 13px;
-    margin-bottom: 23px;
+    font-size: 18px;
+  }
+`
+
+const ExperienceText = styled.p`
+  font-size: 22px;
+  color: #666;
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+  width: 100%;
+  max-width: 80%;
+  white-space: pre-line;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-height: 1.6;
+
+  @media screen and (max-width: 1280px) {
+    font-size: 18px;
   }
 `
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 24px;
   justify-content: center;
   width: 100%;
+  margin-top: 10px;
 
   @media screen and (max-width: 1280px) {
-    gap: 11px;
+    gap: 16px;
   }
 `
 
@@ -179,22 +271,22 @@ const LikeButton = styled.div<LikeButtonProps>`
   color: white;
   border: none;
   cursor: pointer;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 18px;
+  padding: 15px 30px;
+  border-radius: 12px;
+  font-size: 22px;
   font-weight: 600;
-  min-width: 120px;
+  min-width: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 16px;
   transition: all 0.2s ease;
 
   @media screen and (max-width: 1280px) {
-    padding: 8px 17px;
-    font-size: 13px;
-    min-width: 85px;
-    gap: 8px;
+    padding: 12px 20px;
+    font-size: 18px;
+    min-width: 110px;
+    gap: 12px;
   }
 
   &:hover {
@@ -208,17 +300,17 @@ const CloseModalButton = styled.button`
   color: white;
   border: none;
   cursor: pointer;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 18px;
+  padding: 15px 30px;
+  border-radius: 12px;
+  font-size: 22px;
   font-weight: 600;
-  min-width: 120px;
+  min-width: 140px;
   transition: background-color 0.2s ease, transform 0.2s ease;
 
   @media screen and (max-width: 1280px) {
-    padding: 8px 17px;
-    font-size: 13px;
-    min-width: 85px;
+    padding: 12px 20px;
+    font-size: 18px;
+    min-width: 110px;
   }
 
   &:hover {

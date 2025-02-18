@@ -125,25 +125,10 @@ const Result = React.memo(() => {
       </Title>
       <Subtitle>메뉴를 터치하시면 상세 정보를 보실 수 있습니다.</Subtitle>
       <FourColumnLayout>
-        <MenuColumn>
-          <ColumnTitle>Accept Coffee</ColumnTitle>
-          {firstHalfDrinks.map(renderMenuItem)}
-        </MenuColumn>
-
-        <MenuColumn>
-          <ColumnTitle>&nbsp;</ColumnTitle>
-          {secondHalfDrinks.map(renderMenuItem)}
-        </MenuColumn>
-
-        <MenuColumn>
-          <ColumnTitle>Belleboulangerie</ColumnTitle>
-          {firstHalfBakery.map(renderMenuItem)}
-        </MenuColumn>
-
-        <MenuColumn>
-          <ColumnTitle>&nbsp;</ColumnTitle>
-          {secondHalfBakery.map(renderMenuItem)}
-        </MenuColumn>
+        <MenuColumn>{firstHalfDrinks.map(renderMenuItem)}</MenuColumn>
+        <MenuColumn>{secondHalfDrinks.map(renderMenuItem)}</MenuColumn>
+        <MenuColumn>{firstHalfBakery.map(renderMenuItem)}</MenuColumn>
+        <MenuColumn>{secondHalfBakery.map(renderMenuItem)}</MenuColumn>
       </FourColumnLayout>
 
       <GoHomeButton onClick={handleGoHomeButton}>
@@ -198,14 +183,6 @@ const MenuColumn = styled.div`
   flex-direction: column;
   gap: 20px;
   min-width: 0; /* 자식 요소가 부모 영역을 넘어가지 않도록 설정 */
-`
-
-const ColumnTitle = styled.h3`
-  font-size: 20px;
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: #333;
-  min-height: 30px; // 빈 공간에 대한 공백 유지
 `
 
 const MenuItem = styled.div`
