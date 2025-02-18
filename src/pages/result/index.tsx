@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import styled from 'styled-components'
-import { MENU_LIST } from '@/constants/menu'
+import { ACCEPT_MENU_LIST, BELLE_MENU_LIST } from '@/constants/menu'
 import { useLikes } from './useLikes'
 import MenuModal from './components/MenuModal'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -52,18 +52,16 @@ const Result = React.memo(() => {
   const result = (location.state as LocationState)?.result
 
   // 메모이제이션된 필터링된 메뉴
-  const filteredMenus = useMemo(() => {
+  const drinkMenus = useMemo(() => {
     const defaultGender = 'female'
     const gender = result?.gender === 'male' ? 'male' : defaultGender
-    return MENU_LIST.filter((menu) => menu.gender.includes(gender))
+    return ACCEPT_MENU_LIST.filter((menu) => menu.gender.includes(gender))
   }, [result?.gender])
 
-  // 메모이제이션된 타이틀 텍스트
-  const titleText = useMemo(() => {
-    if (result?.gender === 'male') {
-      return '남성이시군요! 아래 메뉴를 추천해 드립니다~!'
-    }
-    return '여성이시군요! 아래 메뉴를 추천해 드립니다~!'
+  const bakeryMenus = useMemo(() => {
+    const defaultGender = 'female'
+    const gender = result?.gender === 'male' ? 'male' : defaultGender
+    return BELLE_MENU_LIST.filter((menu) => menu.gender.includes(gender))
   }, [result?.gender])
 
   // useCallback으로 메모이제이션된 핸들러
@@ -77,23 +75,80 @@ const Result = React.memo(() => {
 
   return (
     <Container>
-      <Title>{titleText}</Title>
+      <Title>
+        <span>{result?.gender === 'male' ? '남성' : '여성'}</span>이시군요! 아래 메뉴를 추천해드립니다~!
+      </Title>
       <Subtitle>메뉴를 터치하시면 상세 정보를 보실 수 있습니다.</Subtitle>
-      <MenuContainer>
-        {filteredMenus.map((menu) => (
-          <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
-            <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
-            <MenuName>{menu.name}</MenuName>
-            <MenuBottom>
-              <p>{menu.brand}</p>
-              <LikeButton>
-                <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
-                <LikeCount>{getLikeCount(menu.id)}</LikeCount>
-              </LikeButton>
-            </MenuBottom>
-          </MenuItem>
-        ))}
-      </MenuContainer>
+      <FourColumnLayout>
+        <MenuColumn>
+          <ColumnTitle>Accept Coffee</ColumnTitle>
+          {drinkMenus.slice(0, Math.ceil(drinkMenus.length / 2)).map((menu) => (
+            <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
+              <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
+              <MenuName>{menu.name}</MenuName>
+              <MenuBottom>
+                <p>{menu.brand}</p>
+                <LikeButton>
+                  <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                  <LikeCount>{getLikeCount(menu.id)}</LikeCount>
+                </LikeButton>
+              </MenuBottom>
+            </MenuItem>
+          ))}
+        </MenuColumn>
+
+        <MenuColumn>
+          <ColumnTitle>&nbsp;</ColumnTitle>
+          {drinkMenus.slice(Math.ceil(drinkMenus.length / 2)).map((menu) => (
+            <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
+              <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
+              <MenuName>{menu.name}</MenuName>
+              <MenuBottom>
+                <p>{menu.brand}</p>
+                <LikeButton>
+                  <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                  <LikeCount>{getLikeCount(menu.id)}</LikeCount>
+                </LikeButton>
+              </MenuBottom>
+            </MenuItem>
+          ))}
+        </MenuColumn>
+
+        <MenuColumn>
+          <ColumnTitle>Belleboulangerie</ColumnTitle>
+          {bakeryMenus.slice(0, Math.ceil(bakeryMenus.length / 2)).map((menu) => (
+            <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
+              <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
+              <MenuName>{menu.name}</MenuName>
+              <MenuBottom>
+                <p>{menu.brand}</p>
+                <LikeButton>
+                  <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                  <LikeCount>{getLikeCount(menu.id)}</LikeCount>
+                </LikeButton>
+              </MenuBottom>
+            </MenuItem>
+          ))}
+        </MenuColumn>
+
+        <MenuColumn>
+          <ColumnTitle>&nbsp;</ColumnTitle>
+          {bakeryMenus.slice(Math.ceil(bakeryMenus.length / 2)).map((menu) => (
+            <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
+              <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
+              <MenuName>{menu.name}</MenuName>
+              <MenuBottom>
+                <p>{menu.brand}</p>
+                <LikeButton>
+                  <SvgIcon name='heart' size={12} style={{ transform: 'translateY(1px)' }} />
+                  <LikeCount>{getLikeCount(menu.id)}</LikeCount>
+                </LikeButton>
+              </MenuBottom>
+            </MenuItem>
+          ))}
+        </MenuColumn>
+      </FourColumnLayout>
+
       <GoHomeButton onClick={handleGoHomeButton}>
         <SvgIcon name='home' size={20} />
         <span>홈으로</span>
@@ -117,6 +172,9 @@ const Title = styled.h2`
   text-align: left;
   font-size: 40px;
   font-weight: 300;
+  span {
+    font-weight: 600;
+  }
 `
 
 const Subtitle = styled.p`
@@ -126,34 +184,50 @@ const Subtitle = styled.p`
   color: black;
 `
 
-const MenuContainer = styled.div`
+// 4열 레이아웃
+const FourColumnLayout = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   width: 100%;
+`
+
+const MenuColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+
+const ColumnTitle = styled.h3`
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+  min-height: 30px; // 빈 공간에 대한 공백 유지
 `
 
 const MenuItem = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center; // 중앙 정렬을 위해 변경
+  align-items: center;
   cursor: pointer;
   transition: transform 0.2s;
   overflow: hidden;
-  width: 100%; // 너비 100% 설정
+  width: 100%;
 
   &:hover {
     transform: scale(1.02);
   }
 
   img {
-    width: 100%; // 이미지 너비를 컨테이너에 맞춤
-    height: auto; // 비율 유지
-    aspect-ratio: 1; // 1:1 비율 유지
-    object-fit: cover; // 이미지가 컨테이너를 꽉 채우도록
-    border-radius: 8px; // 선택적: 이미지 모서리 둥글게
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
   }
 `
+
 const MenuName = styled.span`
   font-size: 18px;
   font-weight: 400;

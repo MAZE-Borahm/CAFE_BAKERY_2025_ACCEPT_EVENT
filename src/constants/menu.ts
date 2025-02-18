@@ -13,92 +13,92 @@ import {
   sausagePastry,
 } from '@/assets/img/bakery'
 import { blackForest, ceo_9, citricCaramel, fruityBerry, hogarden, nutsBerry, panama, tropicalJuice } from '@/assets/img/beans'
-import { americano, cafelatte, einspenner, flatWhite, grapefruitAde, malchaLatteHot, oatmealLatte, oreo, singleOrigin, strawberryLatte } from '@/assets/img/drinks'
+// import { americano, cafelatte, einspenner, flatWhite, grapefruitAde, malchaLatteHot, oatmealLatte, oreo, singleOrigin, strawberryLatte } from '@/assets/img/drinks'
 
-export const MENU_LIST = [
+export const ACCEPT_MENU_LIST = [
   /**음료- 커피 */
-  {
-    id: 1,
-    brand: '억셉트커피',
-    name: '싱글 오리진 커피',
-    description: '각국 다양한 원산지, 품종, 가공방식의 커피를 경험할 수 있습니다.',
-    gender: ['female', 'male'],
-    image: singleOrigin,
-  },
-  {
-    id: 2,
-    brand: '억셉트커피',
-    name: '아메리카노',
-    description: '깊은 풍미의 에스프레소와 물이 조화를 이루는 기본 커피 메뉴입니다.',
-    gender: ['female', 'male'],
-    image: americano,
-  },
-  {
-    id: 3,
-    brand: '억셉트커피',
-    name: '카페 라떼',
-    description: '부드러운 우유와 조화로운 에스프레소가 어우러진 클래식한 라떼입니다.',
-    gender: ['female'],
-    image: cafelatte,
-  },
-  {
-    id: 4,
-    brand: '억셉트커피',
-    name: '플랫 화이트',
-    description: '우유 양이 적어 커피 본연의 풍미와 부드러운 텍스처가 돋보이는 메뉴입니다.',
-    gender: ['female'],
-    image: flatWhite,
-  },
-  {
-    id: 5,
-    brand: '억셉트커피',
-    name: '아인슈페너',
-    description: '블랙커피 위에 크림을 얹은 달콤하고 부드러운 커피 음료입니다.',
-    gender: ['female'],
-    image: einspenner,
-  },
-  /**음료- 베버리지 */
-  {
-    id: 6,
-    brand: '억셉트커피',
-    name: '딸기 라떼',
-    description: '딸기의 상큼한 단맛과 우유가 조화를 이루는 인기 메뉴입니다.',
-    gender: ['female', 'male'],
-    image: strawberryLatte,
-  },
-  {
-    id: 7,
-    brand: '억셉트커피',
-    name: '말차 라떼',
-    description: '진한 말차의 씁쓸함과 우유의 부드러운 단맛이 조화를 이룬 건강한 라떼입니다.',
-    gender: ['female', 'male'],
-    image: malchaLatteHot,
-  },
-  {
-    id: 8,
-    brand: '억셉트커피',
-    name: '오트 라떼',
-    description: '고소한 오트밀크와 에스프레소가 만나 가볍고 부드러운 풍미를 느낄 수 있습니다.',
-    gender: ['female', 'male'],
-    image: oatmealLatte,
-  },
-  {
-    id: 9,
-    brand: '억셉트커피',
-    name: '자몽 에이드',
-    description: '상큼한 자몽과 탄산수가 어우러져 청량감이 뛰어난 상쾌한 음료입니다.',
-    gender: ['female', 'male'],
-    image: grapefruitAde,
-  },
-  {
-    id: 10,
-    brand: '억셉트커피',
-    name: '오레오 프라페',
-    description: '부드러운 프라페에 바삭한 오레오 크럼블이 더해진 달콤한 음료입니다.',
-    gender: ['female', 'male'],
-    image: oreo,
-  },
-  //** 원두 */
+  // {
+  //   id: 1,
+  //   brand: '억셉트커피',
+  //   name: '싱글 오리진 커피',
+  //   description: '각국 다양한 원산지, 품종, 가공방식의 커피를 경험할 수 있습니다.',
+  //   gender: ['female', 'male'],
+  //   image: singleOrigin,
+  // },
+  // {
+  //   id: 2,
+  //   brand: '억셉트커피',
+  //   name: '아메리카노',
+  //   description: '깊은 풍미의 에스프레소와 물이 조화를 이루는 기본 커피 메뉴입니다.',
+  //   gender: ['female', 'male'],
+  //   image: americano,
+  // },
+  // {
+  //   id: 3,
+  //   brand: '억셉트커피',
+  //   name: '카페 라떼',
+  //   description: '부드러운 우유와 조화로운 에스프레소가 어우러진 클래식한 라떼입니다.',
+  //   gender: ['female'],
+  //   image: cafelatte,
+  // },
+  // {
+  //   id: 4,
+  //   brand: '억셉트커피',
+  //   name: '플랫 화이트',
+  //   description: '우유 양이 적어 커피 본연의 풍미와 부드러운 텍스처가 돋보이는 메뉴입니다.',
+  //   gender: ['female'],
+  //   image: flatWhite,
+  // },
+  // {
+  //   id: 5,
+  //   brand: '억셉트커피',
+  //   name: '아인슈페너',
+  //   description: '블랙커피 위에 크림을 얹은 달콤하고 부드러운 커피 음료입니다.',
+  //   gender: ['female'],
+  //   image: einspenner,
+  // },
+  // /**음료- 베버리지 */
+  // {
+  //   id: 6,
+  //   brand: '억셉트커피',
+  //   name: '딸기 라떼',
+  //   description: '딸기의 상큼한 단맛과 우유가 조화를 이루는 인기 메뉴입니다.',
+  //   gender: ['female', 'male'],
+  //   image: strawberryLatte,
+  // },
+  // {
+  //   id: 7,
+  //   brand: '억셉트커피',
+  //   name: '말차 라떼',
+  //   description: '진한 말차의 씁쓸함과 우유의 부드러운 단맛이 조화를 이룬 건강한 라떼입니다.',
+  //   gender: ['female', 'male'],
+  //   image: malchaLatteHot,
+  // },
+  // {
+  //   id: 8,
+  //   brand: '억셉트커피',
+  //   name: '오트 라떼',
+  //   description: '고소한 오트밀크와 에스프레소가 만나 가볍고 부드러운 풍미를 느낄 수 있습니다.',
+  //   gender: ['female', 'male'],
+  //   image: oatmealLatte,
+  // },
+  // {
+  //   id: 9,
+  //   brand: '억셉트커피',
+  //   name: '자몽 에이드',
+  //   description: '상큼한 자몽과 탄산수가 어우러져 청량감이 뛰어난 상쾌한 음료입니다.',
+  //   gender: ['female', 'male'],
+  //   image: grapefruitAde,
+  // },
+  // {
+  //   id: 10,
+  //   brand: '억셉트커피',
+  //   name: '오레오 프라페',
+  //   description: '부드러운 프라페에 바삭한 오레오 크럼블이 더해진 달콤한 음료입니다.',
+  //   gender: ['female', 'male'],
+  //   image: oreo,
+  // },
+  // //** 원두 */
   {
     id: 11,
     brand: '억셉트커피',
@@ -178,6 +178,9 @@ export const MENU_LIST = [
     flavorProfile: '라즈베리, 레몬그라스 / 밝고 선명한 시트러스 산미 / 부드럽고 크리미한 질감 / 그린 애플, 피넛 크래커, 시럽 같은 달콤한 여운(추천 추출 :  핸드드립, V60, 에어로프레스)',
     brewingRecommendation: '복합적인 향미와 게이샤 특유의 플로럴함으로 깊은 인상을 남깁니다.',
   },
+]
+
+export const BELLE_MENU_LIST = [
   /**빵 */
   {
     id: 18,
