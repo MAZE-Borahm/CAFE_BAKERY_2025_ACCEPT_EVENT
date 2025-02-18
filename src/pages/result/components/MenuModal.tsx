@@ -48,28 +48,30 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: Men
       <ModalContent onClick={handleContentClick}>
         <ContentHeader>{menu.name}</ContentHeader>
         <ContentSubHeader>{menu.description}</ContentSubHeader>
-        <ModalImage src={menu.image} alt={menu.name} loading='lazy' />
         <ModalInfo>
-          {(menu.flavorProfile || menu.brewingRecommendation) && (
-            <AdditionalInfoSection>
-              {menu.flavorProfile && (
-                <InfoItem>
-                  <InfoTitle>맛 프로파일</InfoTitle>
-                  <InfoText>{menu.flavorProfile}</InfoText>
-                </InfoItem>
-              )}
-              {menu.brewingRecommendation && (
-                <InfoItem>
-                  <InfoTitle>특징</InfoTitle>
-                  <InfoText>{menu.brewingRecommendation}</InfoText>
-                </InfoItem>
-              )}
-            </AdditionalInfoSection>
-          )}
+          <ModalScrollWrapper>
+            <ModalImage src={menu.image} alt={menu.name} loading='lazy' />
+            {(menu.flavorProfile || menu.brewingRecommendation) && (
+              <AdditionalInfoSection>
+                {menu.flavorProfile && (
+                  <InfoItem>
+                    <InfoTitle>맛 프로파일</InfoTitle>
+                    <InfoText>{menu.flavorProfile}</InfoText>
+                  </InfoItem>
+                )}
+                {menu.brewingRecommendation && (
+                  <InfoItem>
+                    <InfoTitle>특징</InfoTitle>
+                    <InfoText>{menu.brewingRecommendation}</InfoText>
+                  </InfoItem>
+                )}
+              </AdditionalInfoSection>
+            )}
 
-          {/* 실물 경험 텍스트 - 별도로 배치 */}
-          {menu.brand === '억셉트커피' && <ExperienceText>해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.</ExperienceText>}
-          {menu.brand === '벨르블랑제리' && <ExperienceText></ExperienceText>}
+            {/* 실물 경험 텍스트 - 별도로 배치 */}
+            {menu.brand === '억셉트커피' && <ExperienceText>해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.</ExperienceText>}
+            {menu.brand === '벨르블랑제리' && <ExperienceText></ExperienceText>}
+          </ModalScrollWrapper>
 
           <ButtonGroup>
             <LikeButton onClick={handleLike} active={isLiked}>
@@ -106,65 +108,65 @@ const ModalContent = styled.div`
   background-color: white;
   border-radius: 24px;
   width: 80%;
-  height: 70%; // 높이를 10% 줄임
   max-width: 1200px;
-  max-height: 800px; // 최대 높이도 줄임
-  overflow-y: auto;
-  padding: 5%;
+  max-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 5%;
+  overflow: hidden;
 
   @media screen and (max-width: 1280px) {
     width: 90%;
-    height: auto;
-    max-height: 85vh; // 모바일에서도 높이 조정
     padding: 40px;
   }
 `
 
 const ContentHeader = styled.h2`
-  font-size: 42px; // 조금 줄임
+  font-size: 42px;
   font-weight: 700;
   margin: 0;
   text-align: center;
   width: 100%;
-  margin-bottom: 15px; // 간격 줄임
+  margin-bottom: 20px;
   word-break: keep-all;
   overflow-wrap: break-word;
+  color: #333;
 
   @media screen and (max-width: 1280px) {
     font-size: 28px;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
   }
 `
 
 const ContentSubHeader = styled.h3`
-  font-size: 28px; // 조금 줄임
+  font-size: 28px;
   font-weight: 400;
   color: #666;
-  margin: 0 0 30px 0; // 간격 줄임
-  text-align: center;
+  margin: 0 0 30px 0;
+  /* text-align: center; */
   width: 100%;
   word-break: keep-all;
   overflow-wrap: break-word;
   line-height: 1.4;
+  padding: 0 15%;
 
   @media screen and (max-width: 1280px) {
     font-size: 22px;
     margin-bottom: 25px;
+    padding: 0 10%;
   }
 `
 
 const ModalImage = styled.img`
   width: auto;
   height: auto;
-  max-width: 55%; // 이미지 크기 조금 줄임
-  max-height: 45%; // 높이도 조정
+  max-width: 55%;
+  max-height: 45%;
   object-fit: contain;
   border-radius: 12px;
-  margin-bottom: 40px; // 마진 줄임
+  margin-bottom: 40px;
 
   @media screen and (max-width: 1280px) {
     max-width: 75%;
@@ -173,25 +175,57 @@ const ModalImage = styled.img`
 `
 
 const ModalInfo = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 25px; // 간격 조금 줄임
-  width: 100%;
+  gap: 25px;
 
   @media screen and (max-width: 1280px) {
     gap: 20px;
   }
 `
 
-const AdditionalInfoSection = styled.div`
+const ModalScrollWrapper = styled.div`
   width: 100%;
-  max-width: 75%; // 조금 줄임
+  max-height: 30vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 20px; // 간격 줄임
+  align-items: center;
+  gap: 25px;
+  padding-right: 10px;
+  margin-bottom: 20px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  @media screen and (max-width: 1280px) {
+    max-height: 40vh;
+    gap: 20px;
+  }
+`
+
+const AdditionalInfoSection = styled.div`
+  width: 100%;
+  max-width: 75%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   background-color: #f9f9f9;
-  padding: 25px; // 패딩 조정
+  padding: 25px;
   border-radius: 16px;
 
   @media screen and (max-width: 1280px) {
@@ -203,11 +237,11 @@ const AdditionalInfoSection = styled.div`
 const InfoItem = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px; // 간격 조금 줄임
+  gap: 8px;
 `
 
 const InfoTitle = styled.h4`
-  font-size: 22px; // 조금 줄임
+  font-size: 22px;
   font-weight: 600;
   color: #333;
   margin: 0;
@@ -219,7 +253,7 @@ const InfoTitle = styled.h4`
 `
 
 const InfoText = styled.p`
-  font-size: 20px; // 조금 줄임
+  font-size: 20px;
   color: #333;
   margin: 0;
   line-height: 1.5;
@@ -233,13 +267,13 @@ const InfoText = styled.p`
 `
 
 const ExperienceText = styled.p`
-  font-size: 20px; // 조금 줄임
+  font-size: 20px;
   color: #666;
   text-align: center;
   margin: 0;
   font-style: italic;
   width: 100%;
-  max-width: 75%; // 조금 줄임
+  max-width: 75%;
   white-space: pre-line;
   word-break: keep-all;
   overflow-wrap: break-word;
@@ -252,10 +286,10 @@ const ExperienceText = styled.p`
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 20px; // 간격 조금 줄임
+  gap: 20px;
   justify-content: center;
   width: 100%;
-  margin-top: 8px; // 마진 줄임
+  margin-top: 8px;
 
   @media screen and (max-width: 1280px) {
     gap: 14px;
@@ -271,15 +305,15 @@ const LikeButton = styled.div<LikeButtonProps>`
   color: white;
   border: none;
   cursor: pointer;
-  padding: 12px 25px; // 패딩 조금 줄임
+  padding: 12px 25px;
   border-radius: 12px;
-  font-size: 20px; // 폰트 크기 조정
+  font-size: 20px;
   font-weight: 600;
-  min-width: 130px; // 최소 너비 조정
+  min-width: 130px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px; // 간격 조정
+  gap: 14px;
   transition: all 0.2s ease;
 
   @media screen and (max-width: 1280px) {
@@ -300,11 +334,11 @@ const CloseModalButton = styled.button`
   color: white;
   border: none;
   cursor: pointer;
-  padding: 12px 25px; // 패딩 조금 줄임
+  padding: 12px 25px;
   border-radius: 12px;
-  font-size: 20px; // 폰트 크기 조정
+  font-size: 20px;
   font-weight: 600;
-  min-width: 130px; // 최소 너비 조정
+  min-width: 130px;
   transition: background-color 0.2s ease, transform 0.2s ease;
 
   @media screen and (max-width: 1280px) {

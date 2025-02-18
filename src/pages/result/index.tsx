@@ -141,7 +141,7 @@ const Result = React.memo(() => {
         <MenuColumn>
           <ColumnTitle style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
             <img src={belleLogo} style={{ height: 47 }} />
-            Belleboulangerie
+            <span style={{ color: '#377699' }}>Belleboulangerie</span>
           </ColumnTitle>
           {firstHalfBakery.map(renderMenuItem)}
         </MenuColumn>
