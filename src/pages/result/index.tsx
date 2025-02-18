@@ -64,6 +64,24 @@ const Result = React.memo(() => {
     return BELLE_MENU_LIST.filter((menu) => menu.gender.includes(gender))
   }, [result?.gender])
 
+  // 드링크 메뉴 분할
+  const firstHalfDrinks = useMemo(() => {
+    return drinkMenus.slice(0, Math.ceil(drinkMenus.length / 2))
+  }, [drinkMenus])
+
+  const secondHalfDrinks = useMemo(() => {
+    return drinkMenus.slice(Math.ceil(drinkMenus.length / 2))
+  }, [drinkMenus])
+
+  // 베이커리 메뉴 분할
+  const firstHalfBakery = useMemo(() => {
+    return bakeryMenus.slice(0, Math.ceil(bakeryMenus.length / 2))
+  }, [bakeryMenus])
+
+  const secondHalfBakery = useMemo(() => {
+    return bakeryMenus.slice(Math.ceil(bakeryMenus.length / 2))
+  }, [bakeryMenus])
+
   // useCallback으로 메모이제이션된 핸들러
   const handleMenuClick = useCallback((menu: Menu) => {
     setSelectedMenu(menu)
@@ -82,6 +100,24 @@ const Result = React.memo(() => {
     [toggleLike]
   )
 
+  // 메뉴 렌더링 함수
+  const renderMenuItem = useCallback(
+    (menu: Menu) => (
+      <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
+        <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
+        <MenuName>{menu.name}</MenuName>
+        <MenuBottom>
+          <p>{menu.brand}</p>
+          <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
+            <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
+            <LikeCount>{getLikeCount(menu.id)}</LikeCount>
+          </LikeButton>
+        </MenuBottom>
+      </MenuItem>
+    ),
+    [handleLikeClick, handleMenuClick, getLikeCount, isLiked]
+  )
+
   return (
     <Container>
       <Title>
@@ -91,70 +127,22 @@ const Result = React.memo(() => {
       <FourColumnLayout>
         <MenuColumn>
           <ColumnTitle>Accept Coffee</ColumnTitle>
-          {drinkMenus.slice(0, Math.ceil(drinkMenus.length / 2)).map((menu) => (
-            <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
-              <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
-              <MenuName>{menu.name}</MenuName>
-              <MenuBottom>
-                <p>{menu.brand}</p>
-                <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
-                  <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
-                  <LikeCount>{getLikeCount(menu.id)}</LikeCount>
-                </LikeButton>
-              </MenuBottom>
-            </MenuItem>
-          ))}
+          {firstHalfDrinks.map(renderMenuItem)}
         </MenuColumn>
 
         <MenuColumn>
           <ColumnTitle>&nbsp;</ColumnTitle>
-          {drinkMenus.slice(Math.ceil(drinkMenus.length / 2)).map((menu) => (
-            <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
-              <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
-              <MenuName>{menu.name}</MenuName>
-              <MenuBottom>
-                <p>{menu.brand}</p>
-                <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
-                  <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
-                  <LikeCount>{getLikeCount(menu.id)}</LikeCount>
-                </LikeButton>
-              </MenuBottom>
-            </MenuItem>
-          ))}
+          {secondHalfDrinks.map(renderMenuItem)}
         </MenuColumn>
 
         <MenuColumn>
           <ColumnTitle>Belleboulangerie</ColumnTitle>
-          {bakeryMenus.slice(0, Math.ceil(bakeryMenus.length / 2)).map((menu) => (
-            <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
-              <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
-              <MenuName>{menu.name}</MenuName>
-              <MenuBottom>
-                <p>{menu.brand}</p>
-                <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
-                  <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
-                  <LikeCount>{getLikeCount(menu.id)}</LikeCount>
-                </LikeButton>
-              </MenuBottom>
-            </MenuItem>
-          ))}
+          {firstHalfBakery.map(renderMenuItem)}
         </MenuColumn>
 
         <MenuColumn>
           <ColumnTitle>&nbsp;</ColumnTitle>
-          {bakeryMenus.slice(Math.ceil(bakeryMenus.length / 2)).map((menu) => (
-            <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
-              <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
-              <MenuName>{menu.name}</MenuName>
-              <MenuBottom>
-                <p>{menu.brand}</p>
-                <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
-                  <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
-                  <LikeCount>{getLikeCount(menu.id)}</LikeCount>
-                </LikeButton>
-              </MenuBottom>
-            </MenuItem>
-          ))}
+          {secondHalfBakery.map(renderMenuItem)}
         </MenuColumn>
       </FourColumnLayout>
 
@@ -195,18 +183,21 @@ const Subtitle = styled.p`
   color: black;
 `
 
-// 4열 레이아웃
+// 4열 레이아웃 - 여기서 변경
 const FourColumnLayout = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   width: 100%;
+  grid-auto-flow: column; /* 중요: 항목이 열 방향으로 채워지도록 설정 */
+  align-items: start; /* 아이템이 위로 정렬되도록 설정 */
 `
 
 const MenuColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+  min-width: 0; /* 자식 요소가 부모 영역을 넘어가지 않도록 설정 */
 `
 
 const ColumnTitle = styled.h3`

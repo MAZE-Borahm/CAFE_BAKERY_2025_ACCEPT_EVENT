@@ -171,7 +171,7 @@ export const ACCEPT_MENU_LIST = [
   {
     id: 17,
     brand: '억셉트커피',
-    name: '과테말라 COE 9위 - 몬타나 엘라다 게이샤 워시드',
+    name: '몬타나 엘라다 게이샤 워시드',
     description: '각국의 다양한 원산지, 품종, 가공방식 중에서도 최고 수준의 품질을 인정받은 과테말라 COE 9위 수상 커피입니다.',
     gender: ['female', 'male'],
     image: ceo_9,
