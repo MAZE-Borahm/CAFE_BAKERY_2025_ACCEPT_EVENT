@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import SvgIcon from '@/components/SvgIcon'
 import styled from 'styled-components'
@@ -21,6 +21,14 @@ interface MenuModalProps {
 }
 
 const MenuModal = React.memo(({ menu, onClose, onLike, likeCount }: MenuModalProps) => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [])
+
   const handleLike = useCallback(() => {
     onLike()
     onClose()
