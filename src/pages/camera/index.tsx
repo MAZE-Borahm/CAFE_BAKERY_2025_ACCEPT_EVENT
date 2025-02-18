@@ -11,8 +11,9 @@ import loadingAnimation from '@/assets/animations/Animation.json'
 const CameraCapture = () => {
   const navigate = useNavigate()
   const webcamRef = useRef<Webcam>(null)
-  const [, setPhotos] = useState<string[]>([])
+  const [photos, setPhotos] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [hasPermission, setHasPermission] = useState(false)
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
@@ -24,59 +25,50 @@ const CameraCapture = () => {
     return null
   }, [webcamRef])
 
-  useEffect(() => {
-    const capturePhotos = async () => {
-      if (!webcamRef.current) return
-      setPhotos([])
-      setError(null)
+  const capturePhotos = useCallback(async () => {
+    if (!webcamRef.current || !hasPermission) return
+    setPhotos([])
+    setError(null)
 
-      try {
-        for (let i = 0; i < 5; i++) {
-          await new Promise((resolve) => setTimeout(resolve, 1000))
-
-          const photo = capture()
-          if (photo) {
-            setPhotos((prev) => {
-              const newPhotos = prev.length < 5 ? [...prev, photo] : prev
-
-              if (newPhotos.length === 5) {
-                // 5장 촬영 완료 시 서버로 전송
-                analyzeGender(newPhotos)
-                  .then((result) => {
-                    console.log(result)
-
-                    setTimeout(() => {
-                      navigate(ROUTER.RESULT, {
-                        state: {
-                          result: result,
-                        },
-                      })
-                    }, 0)
-                  })
-                  .catch((error) => {
-                    console.error('분석 중 에러:', error)
-
-                    setError('분석 중 오류가 발생했습니다.')
-                  })
-              }
-
-              return newPhotos
-            })
-          }
+    try {
+      const newPhotos: string[] = []
+      for (let i = 0; i < 5; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        const photo = capture()
+        if (photo) {
+          newPhotos.push(photo)
+          setPhotos((prev) => [...prev, photo])
         }
-      } catch (error) {
-        console.error('사진 촬영 중 에러:', error)
-
-        setError('사진 촬영 중 오류가 발생했습니다.')
       }
+
+      if (newPhotos.length === 5) {
+        try {
+          const result = await analyzeGender(newPhotos)
+          navigate(ROUTER.RESULT, {
+            state: {
+              result: result,
+            },
+          })
+        } catch (error) {
+          console.error('분석 중 에러:', error)
+          setError('분석 중 오류가 발생했습니다.')
+        }
+      }
+    } catch (error) {
+      console.error('사진 촬영 중 에러:', error)
+      setError('사진 촬영 중 오류가 발생했습니다.')
     }
+  }, [capture, navigate, hasPermission])
 
-    const timeoutId = setTimeout(() => {
-      capturePhotos()
-    }, 1000)
+  useEffect(() => {
+    if (hasPermission) {
+      const timeoutId = setTimeout(() => {
+        capturePhotos()
+      }, 1000)
 
-    return () => clearTimeout(timeoutId)
-  }, [capture, navigate])
+      return () => clearTimeout(timeoutId)
+    }
+  }, [capturePhotos, hasPermission])
 
   const videoConstraints = {
     width: 1280,
@@ -92,12 +84,16 @@ const CameraCapture = () => {
           audio={false}
           screenshotFormat='image/jpeg'
           videoConstraints={videoConstraints}
+          onUserMedia={() => {
+            setHasPermission(true)
+            setError(null)
+          }}
           onUserMediaError={(error) => {
             console.error('카메라 접근 에러:', error)
             setError('카메라 접근 권한이 필요합니다.')
+            setHasPermission(false)
           }}
         />
-        {/* New Overlay */}
         <WebcamOverlay>
           <div>
             <Lottie animationData={loadingAnimation} />
