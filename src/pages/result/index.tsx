@@ -123,7 +123,7 @@ const Subtitle = styled.p`
   margin-bottom: 24px;
   font-weight: 300;
   font-size: 23px;
-  color: #666;
+  color: black;
 `
 
 const MenuContainer = styled.div`

@@ -45,6 +45,7 @@ const StartButton = styled.button`
   font-size: 96px;
   font-weight: 300;
   background-color: #f3f3ea;
+  color: black;
   border: none;
   @media screen and (max-width: 1280px) {
     font-size: 68px;
