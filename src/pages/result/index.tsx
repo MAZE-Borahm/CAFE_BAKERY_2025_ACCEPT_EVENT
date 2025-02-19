@@ -40,7 +40,22 @@ const OptimizedImage = React.memo(({ src, alt }: { src: string; alt: string }) =
   return (
     <ImageContainer>
       {!isLoaded && !hasError && <Placeholder />}
-      {hasError ? <ErrorPlaceholder /> : <StyledImage src={src} alt={alt} onLoad={handleLoad} onError={handleError} style={{ display: isLoaded ? 'block' : 'none' }} loading='lazy' />}
+      {hasError ? (
+        <ErrorPlaceholder />
+      ) : (
+        <StyledImage
+          src={src}
+          alt={alt}
+          onLoad={handleLoad}
+          onError={handleError}
+          // 이미지가 로드되지 않았을 때도 투명도를 조절하여 보이게 함
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out',
+          }}
+          loading='lazy'
+        />
+      )}
     </ImageContainer>
   )
 })
