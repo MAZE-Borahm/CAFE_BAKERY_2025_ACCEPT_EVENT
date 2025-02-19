@@ -24,6 +24,27 @@ interface LocationState {
   }
 }
 
+// 최적화된 이미지 컴포넌트
+const OptimizedImage = React.memo(({ src, alt }: { src: string; alt: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [hasError, setHasError] = useState(false)
+
+  const handleLoad = () => {
+    setIsLoaded(true)
+  }
+
+  const handleError = () => {
+    setHasError(true)
+  }
+
+  return (
+    <ImageContainer>
+      {!isLoaded && !hasError && <Placeholder />}
+      {hasError ? <ErrorPlaceholder /> : <StyledImage src={src} alt={alt} onLoad={handleLoad} onError={handleError} style={{ display: isLoaded ? 'block' : 'none' }} loading='lazy' />}
+    </ImageContainer>
+  )
+})
+
 const Result = React.memo(() => {
   const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null)
   const { toggleLike, getLikeCount, isLiked } = useLikes()
@@ -81,7 +102,7 @@ const Result = React.memo(() => {
   const renderMenuItem = useCallback(
     (menu: Menu) => (
       <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
-        <ImageContainer>{/* <StyledImage src={menu.image} alt={menu.name} /> */}</ImageContainer>
+        <OptimizedImage src={menu.image} alt={menu.name} />
         <MenuName>{menu.name}</MenuName>
         <MenuBottom>
           <BrandText>{menu.brand}</BrandText>
@@ -142,7 +163,7 @@ const Result = React.memo(() => {
 
 export default Result
 
-// 스타일 컴포넌트 - 애니메이션 제거 버전
+// 스타일 컴포넌트
 const Container = styled.div`
   position: relative;
   padding: 40px 5%;
@@ -213,7 +234,7 @@ const MenuItem = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 `
 
-// 고정 크기 이미지 컨테이너
+// 이미지 관련 스타일
 const ImageContainer = styled.div`
   position: relative;
   width: 100%;
@@ -221,19 +242,39 @@ const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  border-radius: 8px;
   background-color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
 `
 
-// // 고정 크기 이미지
-// const StyledImage = styled.img`
-//   width: 100%;
-//   height: 100%;
-//   object-fit: cover;
-//   object-position: center;
-//   border-radius: 8px;
-// `
+const Placeholder = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #e0e0e0;
+`
+
+const ErrorPlaceholder = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #f8f8f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #888;
+
+  &:after {
+    content: '이미지를 불러올 수 없습니다';
+  }
+`
+
+const StyledImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 8px;
+`
 
 const MenuName = styled.span`
   font-size: 18px;
