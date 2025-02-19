@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import SvgIcon from '@/components/SvgIcon'
 import styled from 'styled-components'
 
 // 상수 정의
-const ICON_SIZE = window.innerWidth <= 1920 ? 16 : 22
+const ICON_SIZE = window.innerWidth <= 1280 ? 16 : 22
 
 interface Menu {
+  id: number
   name: string
   image: string
   description: string
@@ -20,63 +21,13 @@ interface MenuModalProps {
   onLike: () => void
   likeCount: number
   isLiked: boolean
+  isLowPerformanceMode?: boolean
 }
 
-// 최적화된 모달 이미지 로더
-const OptimizedModalImage = React.memo(({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const imgRef = useRef<HTMLImageElement>(null)
-
-  useEffect(() => {
-    // 이미지가 이미 캐시되어 있는지 확인
-    if (imgRef.current && imgRef.current.complete) {
-      setIsLoaded(true)
-    }
-  }, [])
-
-  return (
-    <ImageWrapper>
-      {!isLoaded && <ImageLoading />}
-      <ModalImageStyled
-        ref={imgRef}
-        src={src}
-        alt={alt}
-        {...props}
-        style={{
-          opacity: isLoaded ? 1 : 0,
-          transition: 'opacity 0.3s ease-in-out',
-        }}
-        onLoad={() => setIsLoaded(true)}
-      />
-    </ImageWrapper>
-  )
-})
-
-const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: MenuModalProps) => {
-  const modalRef = useRef<HTMLDivElement>(null)
-  const [isRendered, setIsRendered] = useState(false)
-
-  // 렌더링 최적화를 위한 애니메이션 상태
-  useEffect(() => {
-    // 첫 렌더링 후 애니메이션 적용
-    requestAnimationFrame(() => {
-      setIsRendered(true)
-    })
-
-    document.body.style.overflow = 'hidden'
-
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [])
-
-  const handleLike = useCallback(() => {
-    onLike()
-  }, [onLike])
-
+const MenuModal: React.FC<MenuModalProps> = ({ menu, onClose, onLike, likeCount, isLiked, isLowPerformanceMode = false }) => {
+  // 오버레이 클릭 핸들러
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent) => {
-      // 모달 외부 클릭 시에만 닫기
       if (e.target === e.currentTarget) {
         onClose()
       }
@@ -84,72 +35,115 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: Men
     [onClose]
   )
 
-  // 키보드 이벤트 처리
+  // Esc 키 리스너
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
+      if (e.key === 'Escape') onClose()
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onClose])
 
+  // 바디 스크롤 방지
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [])
+
+  // 저사양 모드일 경우 간소화된 모달 표시
+  if (isLowPerformanceMode) {
+    return (
+      <LightModalOverlay onClick={handleOverlayClick}>
+        <LightModalContent>
+          <LightHeader>{menu.name}</LightHeader>
+          <LightDescription>{menu.description}</LightDescription>
+
+          <LightImage src={menu.image} alt={menu.name} />
+
+          {/* 추가 정보 표시 */}
+          {(menu.flavorProfile || menu.brewingRecommendation) && (
+            <LightInfoBox>
+              {menu.flavorProfile && (
+                <LightInfoItem>
+                  <LightInfoTitle>맛 프로파일</LightInfoTitle>
+                  <LightInfoText>{menu.flavorProfile}</LightInfoText>
+                </LightInfoItem>
+              )}
+              {menu.brewingRecommendation && (
+                <LightInfoItem>
+                  <LightInfoTitle>특징</LightInfoTitle>
+                  <LightInfoText>{menu.brewingRecommendation}</LightInfoText>
+                </LightInfoItem>
+              )}
+            </LightInfoBox>
+          )}
+
+          {/* 브랜드별 안내 문구 */}
+          {menu.brand === '억셉트커피' && <LightNoteText>해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.</LightNoteText>}
+
+          {/* 버튼 그룹 */}
+          <LightButtonGroup>
+            <LightButton onClick={onLike} $active={isLiked}>
+              {isLiked ? '♥' : '♡'} {likeCount}
+            </LightButton>
+            <LightButton onClick={onClose}>닫기</LightButton>
+          </LightButtonGroup>
+        </LightModalContent>
+      </LightModalOverlay>
+    )
+  }
+
+  // 일반 모드 모달
   return (
-    <ModalOverlay onClick={handleOverlayClick} style={{ opacity: isRendered ? 1 : 0 }}>
-      <ModalContent
-        ref={modalRef}
-        style={{
-          transform: isRendered ? 'translateY(0)' : 'translateY(20px)',
-          opacity: isRendered ? 1 : 0,
-        }}
-      >
-        <ContentHeader>{menu.name}</ContentHeader>
-        <div style={{ width: '100%', padding: '0 30px' }}>
-          <ContentSubHeader>{menu.description}</ContentSubHeader>
-        </div>
-        <ModalInfo>
-          <ModalScrollWrapper>
-            <OptimizedModalImage src={menu.image} alt={menu.name} />
-            {(menu.flavorProfile || menu.brewingRecommendation) && (
-              <AdditionalInfoSection>
-                {menu.flavorProfile && (
-                  <InfoItem>
-                    <InfoTitle>맛 프로파일</InfoTitle>
-                    <InfoText>{menu.flavorProfile}</InfoText>
-                  </InfoItem>
-                )}
-                {menu.brewingRecommendation && (
-                  <InfoItem>
-                    <InfoTitle>특징</InfoTitle>
-                    <InfoText>{menu.brewingRecommendation}</InfoText>
-                  </InfoItem>
-                )}
-              </AdditionalInfoSection>
-            )}
+    <ModalOverlay onClick={handleOverlayClick}>
+      <ModalContent>
+        <Header>{menu.name}</Header>
+        <Description>{menu.description}</Description>
 
-            {/* 실물 경험 텍스트 - 별도로 배치 */}
-            {menu.brand === '억셉트커피' && <ExperienceText>해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.</ExperienceText>}
-            {menu.brand === '벨르블랑제리' && <ExperienceText></ExperienceText>}
-          </ModalScrollWrapper>
+        <ScrollArea>
+          <MenuImage src={menu.image} alt={menu.name} loading='lazy' />
 
-          <ButtonGroup>
-            <LikeButton onClick={handleLike} active={isLiked}>
-              <SvgIcon name={isLiked ? 'fillHeart' : 'heart'} size={ICON_SIZE} style={{ transform: 'translateY(1px)' }} />
-              <span>{likeCount}</span>
-            </LikeButton>
-            <CloseModalButton onClick={onClose}>닫기</CloseModalButton>
-          </ButtonGroup>
-        </ModalInfo>
+          {/* 추가 정보 표시 */}
+          {(menu.flavorProfile || menu.brewingRecommendation) && (
+            <InfoSection>
+              {menu.flavorProfile && (
+                <InfoItem>
+                  <InfoTitle>맛 프로파일</InfoTitle>
+                  <InfoText>{menu.flavorProfile}</InfoText>
+                </InfoItem>
+              )}
+              {menu.brewingRecommendation && (
+                <InfoItem>
+                  <InfoTitle>특징</InfoTitle>
+                  <InfoText>{menu.brewingRecommendation}</InfoText>
+                </InfoItem>
+              )}
+            </InfoSection>
+          )}
+
+          {/* 브랜드별 안내 문구 */}
+          {menu.brand === '억셉트커피' && <NoteText>해당 메뉴는 현재 부스에서 실물을 경험하실 수 있습니다.</NoteText>}
+        </ScrollArea>
+
+        {/* 버튼 그룹 */}
+        <ButtonGroup>
+          <LikeButton onClick={onLike} $active={isLiked}>
+            <SvgIcon name={isLiked ? 'fillHeart' : 'heart'} size={ICON_SIZE} style={{ transform: 'translateY(1px)' }} />
+            <span>{likeCount}</span>
+          </LikeButton>
+          <CloseButton onClick={onClose}>닫기</CloseButton>
+        </ButtonGroup>
       </ModalContent>
     </ModalOverlay>
   )
-})
+}
 
 export default MenuModal
 
-// 스타일드 컴포넌트
+// ----- 일반 모드 스타일 컴포넌트 ----- //
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -162,9 +156,6 @@ const ModalOverlay = styled.div`
   align-items: center;
   z-index: 1000;
   padding: 2%;
-  transition: opacity 0.2s ease-out;
-  backdrop-filter: blur(2px);
-  will-change: opacity;
 `
 
 const ModalContent = styled.div`
@@ -178,124 +169,58 @@ const ModalContent = styled.div`
   flex-direction: column;
   align-items: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 5%;
+  padding: 40px;
   overflow: hidden;
-  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
-  will-change: transform, opacity;
-  transform: translateZ(0);
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 768px) {
     width: 90%;
-    padding: 40px;
+    padding: 30px 20px;
   }
 `
 
-const ImageWrapper = styled.div`
-  position: relative;
-  display: inline-block;
-  width: auto;
-  max-width: 55%;
-  height: auto;
-  max-height: 45%;
-  margin-bottom: 40px;
-
-  @media screen and (max-width: 1280px) {
-    max-width: 75%;
-    margin-bottom: 30px;
-  }
-`
-
-const ImageLoading = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, rgba(240, 240, 240, 0.6) 0%, rgba(245, 245, 245, 0.8) 50%, rgba(240, 240, 240, 0.6) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 12px;
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-`
-
-const ModalImageStyled = styled.img`
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 12px;
-  transform: translateZ(0);
-`
-
-const ContentHeader = styled.h2`
+const Header = styled.h2`
   font-size: 42px;
   font-weight: 700;
-  margin: 0;
+  margin: 0 0 20px;
   text-align: center;
   width: 100%;
-  margin-bottom: 20px;
   word-break: keep-all;
-  overflow-wrap: break-word;
   color: #333;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 768px) {
     font-size: 28px;
     margin-bottom: 15px;
   }
 `
 
-const ContentSubHeader = styled.h3`
+const Description = styled.h3`
   font-size: 28px;
   font-weight: 400;
   color: #666;
-  margin: 0 0 30px 0;
+  margin: 0 0 30px;
+  text-align: center;
   width: 100%;
-  word-break: keep-all;
-  overflow-wrap: break-word;
+  max-width: 80%;
   line-height: 1.4;
-  padding: 0 15%;
 
-  @media screen and (max-width: 1280px) {
-    font-size: 22px;
-    margin-bottom: 25px;
-    padding: 0 10%;
+  @media screen and (max-width: 768px) {
+    font-size: 18px;
+    margin-bottom: 20px;
   }
 `
 
-const ModalInfo = styled.div`
+const ScrollArea = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
-
-  @media screen and (max-width: 1280px) {
-    gap: 20px;
-  }
-`
-
-const ModalScrollWrapper = styled.div`
-  width: 100%;
-  max-height: 30vh;
+  max-height: 50vh;
   overflow-y: auto;
+  padding: 0 20px 20px;
+  margin-bottom: 20px;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 25px;
-  padding-right: 10px;
-  margin-bottom: 20px;
-  will-change: scroll-position;
-  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
 
+  /* 스크롤바 스타일 */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -310,27 +235,31 @@ const ModalScrollWrapper = styled.div`
   &::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+`
 
-  @media screen and (max-width: 1280px) {
-    max-height: 40vh;
-    gap: 20px;
+const MenuImage = styled.img`
+  max-width: 50%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin: 0 0 30px;
+
+  @media screen and (max-width: 768px) {
+    max-width: 90%;
+    max-height: 250px;
   }
 `
 
-const AdditionalInfoSection = styled.div`
+const InfoSection = styled.div`
   width: 100%;
-  max-width: 75%;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   background-color: #f9f9f9;
   padding: 25px;
   border-radius: 16px;
-
-  @media screen and (max-width: 1280px) {
-    padding: 15px;
-    gap: 15px;
-  }
+  margin-bottom: 20px;
 `
 
 const InfoItem = styled.div`
@@ -344,42 +273,37 @@ const InfoTitle = styled.h4`
   font-weight: 600;
   color: #333;
   margin: 0;
-  word-break: keep-all;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 768px) {
     font-size: 18px;
   }
 `
 
 const InfoText = styled.p`
-  font-size: 20px;
+  font-size: 18px;
   color: #333;
   margin: 0;
   line-height: 1.5;
   white-space: pre-line;
   word-break: keep-all;
-  overflow-wrap: break-word;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 768px) {
     font-size: 16px;
   }
 `
 
-const ExperienceText = styled.p`
-  font-size: 20px;
+const NoteText = styled.p`
+  font-size: 18px;
   color: #666;
   text-align: center;
   margin: 0;
   font-style: italic;
   width: 100%;
-  max-width: 75%;
-  white-space: pre-line;
-  word-break: keep-all;
-  overflow-wrap: break-word;
+  max-width: 700px;
   line-height: 1.5;
 
-  @media screen and (max-width: 1280px) {
-    font-size: 16px;
+  @media screen and (max-width: 768px) {
+    font-size: 14px;
   }
 `
 
@@ -388,19 +312,18 @@ const ButtonGroup = styled.div`
   gap: 20px;
   justify-content: center;
   width: 100%;
-  margin-top: 8px;
 
-  @media screen and (max-width: 1280px) {
-    gap: 14px;
+  @media screen and (max-width: 768px) {
+    gap: 10px;
   }
 `
 
-interface LikeButtonProps {
-  active: boolean
+interface ButtonProps {
+  $active?: boolean
 }
 
-const LikeButton = styled.div<LikeButtonProps>`
-  background: ${(props) => (props.active ? '#ff3333' : '#ff0000cc')};
+const LikeButton = styled.button<ButtonProps>`
+  background: ${(props) => (props.$active ? '#ff3333' : '#ff0000cc')};
   color: white;
   border: none;
   cursor: pointer;
@@ -413,11 +336,9 @@ const LikeButton = styled.div<LikeButtonProps>`
   align-items: center;
   justify-content: center;
   gap: 14px;
-  transition: all 0.15s ease;
-  transform: translateZ(0); /* 하드웨어 가속 */
-  will-change: transform, background-color;
+  transition: all 0.2s ease;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 768px) {
     padding: 10px 18px;
     font-size: 16px;
     min-width: 100px;
@@ -428,13 +349,9 @@ const LikeButton = styled.div<LikeButtonProps>`
     background-color: #ff3333;
     transform: scale(1.02);
   }
-
-  &:active {
-    transform: scale(0.98);
-  }
 `
 
-const CloseModalButton = styled.button`
+const CloseButton = styled.button`
   background: #333;
   color: white;
   border: none;
@@ -444,11 +361,9 @@ const CloseModalButton = styled.button`
   font-size: 20px;
   font-weight: 600;
   min-width: 130px;
-  transition: background-color 0.15s ease, transform 0.15s ease;
-  transform: translateZ(0); /* 하드웨어 가속 */
-  will-change: transform, background-color;
+  transition: all 0.2s ease;
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 768px) {
     padding: 10px 18px;
     font-size: 16px;
     min-width: 100px;
@@ -458,8 +373,118 @@ const CloseModalButton = styled.button`
     background-color: #444;
     transform: scale(1.02);
   }
+`
 
-  &:active {
-    transform: scale(0.98);
+// ----- 저사양 모드 스타일 컴포넌트 ----- //
+const LightModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 16px;
+`
+
+const LightModalContent = styled.div`
+  position: relative;
+  background-color: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`
+
+const LightHeader = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  text-align: center;
+  color: #333;
+`
+
+const LightDescription = styled.p`
+  font-size: 16px;
+  margin: 0 0 20px;
+  text-align: center;
+  color: #666;
+`
+
+const LightImage = styled.img`
+  display: block;
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  margin: 0 auto 20px;
+  border-radius: 8px;
+`
+
+const LightInfoBox = styled.div`
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+`
+
+const LightInfoItem = styled.div`
+  margin-bottom: 15px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`
+
+const LightInfoTitle = styled.h4`
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px;
+  color: #333;
+`
+
+const LightInfoText = styled.p`
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.4;
+  color: #333;
+`
+
+const LightNoteText = styled.p`
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin: 0 0 20px;
+  font-style: italic;
+`
+
+const LightButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+`
+
+const LightButton = styled.button<ButtonProps>`
+  background-color: ${(props) => (props.$active ? '#ff3333' : '#666')};
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  min-width: 80px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  &:hover {
+    opacity: 0.9;
   }
 `
