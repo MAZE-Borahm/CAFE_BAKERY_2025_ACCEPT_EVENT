@@ -37,7 +37,7 @@ const CameraCapture = () => {
 
       for (let i = 0; i < 5; i++) {
         setRemainingPhotos(5 - i)
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await new Promise((resolve) => setTimeout(resolve, 500))
         const photo = capture()
         if (photo) {
           newPhotos.push(photo)
@@ -75,7 +75,7 @@ const CameraCapture = () => {
     if (hasPermission) {
       const timeoutId = setTimeout(() => {
         capturePhotos()
-      }, 1000)
+      }, 500)
 
       return () => clearTimeout(timeoutId)
     }

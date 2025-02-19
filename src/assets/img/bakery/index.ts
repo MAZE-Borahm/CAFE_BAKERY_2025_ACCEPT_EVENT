@@ -1,7 +1,7 @@
 import almondCroissants from './almond-croissants.webp'
 import appleCreamCheesePie from './apple-cream-cheese-pie.webp'
 import basilSandwich from './basil-sandwich.webp'
-import blueberryCreamCheeseCronut from './blueberry-cream-cheese-cronut .webp.webp'
+import blueberryCreamCheeseCronut from './blueberry-cream-cheese-cronut.webp'
 import brioche from './brioche.webp'
 import chiveCreamCheeseSaltbread from './chive-cream-cheese saltbread.webp'
 import chocobangoChocolates from './chocobango-chocolates.webp'
