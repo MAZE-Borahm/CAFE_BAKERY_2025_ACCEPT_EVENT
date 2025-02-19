@@ -212,14 +212,14 @@ const FourColumnLayout = styled.div`
   grid-auto-flow: column;
   align-items: start;
 
-  @media (max-width: 1024px) {
+  /* @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-flow: row;
   }
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
-  }
+  } */
 `
 
 const MenuColumn = styled.div`
