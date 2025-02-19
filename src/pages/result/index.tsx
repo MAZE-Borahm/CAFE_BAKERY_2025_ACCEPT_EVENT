@@ -81,9 +81,7 @@ const Result = React.memo(() => {
   const renderMenuItem = useCallback(
     (menu: Menu) => (
       <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
-        <ImageContainer>
-          <StyledImage src={menu.image} alt={menu.name} />
-        </ImageContainer>
+        <ImageContainer>{/* <StyledImage src={menu.image} alt={menu.name} /> */}</ImageContainer>
         <MenuName>{menu.name}</MenuName>
         <MenuBottom>
           <BrandText>{menu.brand}</BrandText>
