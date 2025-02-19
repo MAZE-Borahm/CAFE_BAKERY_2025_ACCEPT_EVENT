@@ -226,14 +226,14 @@ const ImageContainer = styled.div`
   background-color: #f5f5f5;
 `
 
-// 고정 크기 이미지
-const StyledImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 8px;
-`
+// // 고정 크기 이미지
+// const StyledImage = styled.img`
+//   width: 100%;
+//   height: 100%;
+//   object-fit: cover;
+//   object-position: center;
+//   border-radius: 8px;
+// `
 
 const MenuName = styled.span`
   font-size: 18px;
