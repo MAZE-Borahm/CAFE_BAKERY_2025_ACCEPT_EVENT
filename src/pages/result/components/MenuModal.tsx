@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import SvgIcon from '@/components/SvgIcon'
 import styled from 'styled-components'
 
@@ -22,20 +22,47 @@ interface MenuModalProps {
   isLiked: boolean
 }
 
-const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: MenuModalProps) => {
-  const handleLike = useCallback(() => {
-    onLike()
-  }, [onLike])
-
-  const handleOverlayClick = useCallback(() => {
-    onClose()
-  }, [onClose])
-
-  const handleContentClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation()
-  }, [])
+// 최적화된 모달 이미지 로더
+const OptimizedModalImage = React.memo(({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+  const [isLoaded, setIsLoaded] = useState(false)
+  const imgRef = useRef<HTMLImageElement>(null)
 
   useEffect(() => {
+    // 이미지가 이미 캐시되어 있는지 확인
+    if (imgRef.current && imgRef.current.complete) {
+      setIsLoaded(true)
+    }
+  }, [])
+
+  return (
+    <ImageWrapper>
+      {!isLoaded && <ImageLoading />}
+      <ModalImageStyled
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        {...props}
+        style={{
+          opacity: isLoaded ? 1 : 0,
+          transition: 'opacity 0.3s ease-in-out',
+        }}
+        onLoad={() => setIsLoaded(true)}
+      />
+    </ImageWrapper>
+  )
+})
+
+const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: MenuModalProps) => {
+  const modalRef = useRef<HTMLDivElement>(null)
+  const [isRendered, setIsRendered] = useState(false)
+
+  // 렌더링 최적화를 위한 애니메이션 상태
+  useEffect(() => {
+    // 첫 렌더링 후 애니메이션 적용
+    requestAnimationFrame(() => {
+      setIsRendered(true)
+    })
+
     document.body.style.overflow = 'hidden'
 
     return () => {
@@ -43,16 +70,48 @@ const MenuModal = React.memo(({ menu, onClose, onLike, likeCount, isLiked }: Men
     }
   }, [])
 
+  const handleLike = useCallback(() => {
+    onLike()
+  }, [onLike])
+
+  const handleOverlayClick = useCallback(
+    (e: React.MouseEvent) => {
+      // 모달 외부 클릭 시에만 닫기
+      if (e.target === e.currentTarget) {
+        onClose()
+      }
+    },
+    [onClose]
+  )
+
+  // 키보드 이벤트 처리
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
+
   return (
-    <ModalOverlay onClick={handleOverlayClick}>
-      <ModalContent onClick={handleContentClick}>
+    <ModalOverlay onClick={handleOverlayClick} style={{ opacity: isRendered ? 1 : 0 }}>
+      <ModalContent
+        ref={modalRef}
+        style={{
+          transform: isRendered ? 'translateY(0)' : 'translateY(20px)',
+          opacity: isRendered ? 1 : 0,
+        }}
+      >
         <ContentHeader>{menu.name}</ContentHeader>
         <div style={{ width: '100%', padding: '0 30px' }}>
           <ContentSubHeader>{menu.description}</ContentSubHeader>
         </div>
         <ModalInfo>
           <ModalScrollWrapper>
-            <ModalImage src={menu.image} alt={menu.name} loading='lazy' />
+            <OptimizedModalImage src={menu.image} alt={menu.name} />
             {(menu.flavorProfile || menu.brewingRecommendation) && (
               <AdditionalInfoSection>
                 {menu.flavorProfile && (
@@ -103,6 +162,9 @@ const ModalOverlay = styled.div`
   align-items: center;
   z-index: 1000;
   padding: 2%;
+  transition: opacity 0.2s ease-out;
+  backdrop-filter: blur(2px);
+  will-change: opacity;
 `
 
 const ModalContent = styled.div`
@@ -118,11 +180,60 @@ const ModalContent = styled.div`
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   padding: 5%;
   overflow: hidden;
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+  will-change: transform, opacity;
+  transform: translateZ(0);
 
   @media screen and (max-width: 1280px) {
     width: 90%;
     padding: 40px;
   }
+`
+
+const ImageWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: auto;
+  max-width: 55%;
+  height: auto;
+  max-height: 45%;
+  margin-bottom: 40px;
+
+  @media screen and (max-width: 1280px) {
+    max-width: 75%;
+    margin-bottom: 30px;
+  }
+`
+
+const ImageLoading = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(240, 240, 240, 0.6) 0%, rgba(245, 245, 245, 0.8) 50%, rgba(240, 240, 240, 0.6) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 12px;
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+`
+
+const ModalImageStyled = styled.img`
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  transform: translateZ(0);
 `
 
 const ContentHeader = styled.h2`
@@ -147,8 +258,6 @@ const ContentSubHeader = styled.h3`
   font-weight: 400;
   color: #666;
   margin: 0 0 30px 0;
-
-  /* text-align: center; */
   width: 100%;
   word-break: keep-all;
   overflow-wrap: break-word;
@@ -159,21 +268,6 @@ const ContentSubHeader = styled.h3`
     font-size: 22px;
     margin-bottom: 25px;
     padding: 0 10%;
-  }
-`
-
-const ModalImage = styled.img`
-  width: auto;
-  height: auto;
-  max-width: 55%;
-  max-height: 45%;
-  object-fit: contain;
-  border-radius: 12px;
-  margin-bottom: 40px;
-
-  @media screen and (max-width: 1280px) {
-    max-width: 75%;
-    margin-bottom: 30px;
   }
 `
 
@@ -199,6 +293,8 @@ const ModalScrollWrapper = styled.div`
   gap: 25px;
   padding-right: 10px;
   margin-bottom: 20px;
+  will-change: scroll-position;
+  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -317,7 +413,9 @@ const LikeButton = styled.div<LikeButtonProps>`
   align-items: center;
   justify-content: center;
   gap: 14px;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  transform: translateZ(0); /* 하드웨어 가속 */
+  will-change: transform, background-color;
 
   @media screen and (max-width: 1280px) {
     padding: 10px 18px;
@@ -329,6 +427,10 @@ const LikeButton = styled.div<LikeButtonProps>`
   &:hover {
     background-color: #ff3333;
     transform: scale(1.02);
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 `
 
@@ -342,7 +444,9 @@ const CloseModalButton = styled.button`
   font-size: 20px;
   font-weight: 600;
   min-width: 130px;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+  transform: translateZ(0); /* 하드웨어 가속 */
+  will-change: transform, background-color;
 
   @media screen and (max-width: 1280px) {
     padding: 10px 18px;
@@ -353,5 +457,9 @@ const CloseModalButton = styled.button`
   &:hover {
     background-color: #444;
     transform: scale(1.02);
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 `

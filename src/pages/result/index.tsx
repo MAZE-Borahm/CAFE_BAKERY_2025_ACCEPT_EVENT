@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { ACCEPT_MENU_LIST, BELLE_MENU_LIST } from '@/constants/menu'
 import { useLikes } from './useLikes'
@@ -24,24 +24,50 @@ interface LocationState {
   }
 }
 
+// 최적화된 LazyImage 컴포넌트
 const LazyImage = React.memo(({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const imgRef = useRef<HTMLDivElement>(null)
 
-  const handleImageLoad = React.useCallback(() => {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '200px' } // 뷰포트 200px 전에 로드 시작
+    )
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
+  const handleImageLoad = useCallback(() => {
     setIsLoaded(true)
   }, [])
 
   return (
-    <img
-      src={src}
-      alt={alt}
-      {...props}
-      style={{
-        opacity: isLoaded ? 1 : 0.5,
-        transition: 'opacity 0.3s ease-in-out',
-      }}
-      onLoad={handleImageLoad}
-    />
+    <ImageContainer ref={imgRef}>
+      {!isLoaded && <ImagePlaceholder />}
+      {isVisible && (
+        <StyledImage
+          src={src}
+          alt={alt}
+          {...props}
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out',
+          }}
+          onLoad={handleImageLoad}
+        />
+      )}
+    </ImageContainer>
   )
 })
 
@@ -83,6 +109,29 @@ const Result = React.memo(() => {
     return bakeryMenus.slice(Math.ceil(bakeryMenus.length / 2))
   }, [bakeryMenus])
 
+  // 이미지 사전 로딩
+  useEffect(() => {
+    // 메뉴 이미지 사전 로딩
+    const preloadImages = () => {
+      const allMenus = [...drinkMenus, ...bakeryMenus]
+      allMenus.forEach((menu) => {
+        if (menu.image) {
+          const img = new Image()
+          img.src = menu.image
+        }
+      })
+    }
+
+    preloadImages()
+  }, [drinkMenus, bakeryMenus])
+
+  // 모달 사전 준비
+  const [isModalPreloaded, setIsModalPreloaded] = useState(false)
+  useEffect(() => {
+    // 컴포넌트 마운트 후 모달 준비
+    setIsModalPreloaded(true)
+  }, [])
+
   // useCallback으로 메모이제이션된 핸들러
   const handleMenuClick = useCallback((menu: Menu) => {
     setSelectedMenu(menu)
@@ -92,31 +141,22 @@ const Result = React.memo(() => {
     navigation(ROUTER.MAIN)
   }, [navigation])
 
-  // 좋아요 버튼 클릭 핸들러
-  const handleLikeClick = useCallback(
-    (e: React.MouseEvent, menuId: number) => {
-      e.stopPropagation() // 메뉴 클릭 이벤트가 발생하지 않도록 함
-      toggleLike(menuId)
-    },
-    [toggleLike]
-  )
-
   // 메뉴 렌더링 함수
   const renderMenuItem = useCallback(
     (menu: Menu) => (
       <MenuItem key={menu.id} onClick={() => handleMenuClick(menu)}>
-        <LazyImage src={menu.image} alt={menu.name} width={250} height={250} loading='lazy' />
+        <LazyImage src={menu.image} alt={menu.name} width={250} height={250} />
         <MenuName>{menu.name}</MenuName>
         <MenuBottom>
           <p>{menu.brand}</p>
-          <LikeButton onClick={(e) => handleLikeClick(e, menu.id)} active={isLiked(menu.id)}>
+          <LikeButton active={isLiked(menu.id)}>
             <SvgIcon name={isLiked(menu.id) ? 'fillHeart' : 'heart'} size={12} style={{ transform: 'translateY(1px)' }} />
             <LikeCount>{getLikeCount(menu.id)}</LikeCount>
           </LikeButton>
         </MenuBottom>
       </MenuItem>
     ),
-    [handleLikeClick, handleMenuClick, getLikeCount, isLiked]
+    [handleMenuClick, getLikeCount, isLiked]
   )
 
   return (
@@ -156,7 +196,8 @@ const Result = React.memo(() => {
         <SvgIcon name='home' size={20} />
         <span>홈으로</span>
       </GoHomeButton>
-      {selectedMenu && (
+
+      {isModalPreloaded && selectedMenu && (
         <MenuModal menu={selectedMenu} onClose={() => setSelectedMenu(null)} onLike={() => toggleLike(selectedMenu.id)} likeCount={getLikeCount(selectedMenu.id)} isLiked={isLiked(selectedMenu.id)} />
       )}
     </Container>
@@ -165,11 +206,13 @@ const Result = React.memo(() => {
 
 export default Result
 
+// Styled Components
 const Container = styled.div`
   position: relative;
   padding: 40px 5%;
   max-width: 1200px;
   margin: 0 auto;
+  will-change: contents;
 `
 
 const Title = styled.h2`
@@ -189,21 +232,21 @@ const Subtitle = styled.p`
   color: black;
 `
 
-// 4열 레이아웃 - 여기서 변경
 const FourColumnLayout = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   width: 100%;
-  grid-auto-flow: column; /* 중요: 항목이 열 방향으로 채워지도록 설정 */
-  align-items: start; /* 아이템이 위로 정렬되도록 설정 */
+  grid-auto-flow: column;
+  align-items: start;
+  will-change: transform;
 `
 
 const MenuColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-width: 0; /* 자식 요소가 부모 영역을 넘어가지 않도록 설정 */
+  min-width: 0;
 `
 
 const ColumnTitle = styled.h3`
@@ -211,7 +254,7 @@ const ColumnTitle = styled.h3`
   font-weight: 500;
   margin-bottom: 8px;
   color: #333;
-  min-height: 30px; // 빈 공간에 대한 공백 유지
+  min-height: 30px;
 `
 
 const MenuItem = styled.div`
@@ -222,22 +265,58 @@ const MenuItem = styled.div`
   transition: transform 0.2s;
   overflow: hidden;
   width: 100%;
+  transform: translateZ(0);
+  will-change: transform;
 
   &:hover {
     transform: scale(1.02);
   }
+`
 
-  img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 8px;
+// 이미지 컨테이너 - 비율 유지하고 중앙 정렬
+const ImageContainer = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+`
+
+// 이미지 내부 스타일 - contain으로 변경하여 비율 유지
+const StyledImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  transform: translateZ(0);
+`
+
+const ImagePlaceholder = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(240, 240, 240, 0.6) 0%, rgba(245, 245, 245, 0.8) 50%, rgba(240, 240, 240, 0.6) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
   }
 `
 
 const MenuName = styled.span`
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 400;
   margin-top: 11px;
   text-align: left;
@@ -277,6 +356,7 @@ const LikeButton = styled.button<LikeButtonProps>`
   font-size: 16px;
   font-weight: 700;
   transition: all 0.2s ease;
+  transform: translateZ(0);
 
   &:hover {
     background-color: #ff3333;
@@ -303,6 +383,7 @@ const GoHomeButton = styled.div`
   justify-content: center;
   color: white;
   cursor: pointer;
+  transform: translateZ(0);
 
   span {
     font-size: 12px;
